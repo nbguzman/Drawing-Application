@@ -100,7 +100,7 @@ public class AppWindow extends JFrame {
         JButton _selectionTool;
 
         //creating the toolbar
-        _toolBar = new JToolBar("Tool Palette", JToolBar.VERTICAL);
+        _toolBar = new JToolBar("Tool Palette");
         _toolBar.setLayout(new BoxLayout(_toolBar, BoxLayout.Y_AXIS));
         _toolBar.setFloatable(false);
         _toolBar.setRollover(true);
