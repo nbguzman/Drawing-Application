@@ -10,20 +10,21 @@ public class AppWindow extends JFrame {
     //single instance, used globally
     private static AppWindow _instance;
     //data used within the class
-    String[] _shapes = { "Line", "Rectangle", "Circle", "Triangle" };
-    String[] _colours = { "Black", "Red", "Green", "Blue" };
-    String[] _weight = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-    String[] _style = { "Solid", "Dashed" };
+    DrawPanel _drawPanel;
+    private String[] _shapes = { "Line", "Rectangle", "Circle", "Triangle" };
+    private String[] _colours = { "Black", "Red", "Green", "Blue" };
+    private String[] _weight = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+    private String[] _style = { "Solid", "Dashed" };
 
     //singleton related methods
     private AppWindow() {
         buildFrame();
         buildMenu();
         buildToolbar();
-
         //pack();
     }
 
+    // only 1 instance of window
     public static AppWindow getInstance() {
         if (_instance == null)
             _instance = new AppWindow();
@@ -36,7 +37,10 @@ public class AppWindow extends JFrame {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         int height = (int)(dim.width * 0.8);
         int width = (int)(dim.height * 0.8);
-
+               
+        //instantiate a panel to draw shapes on
+        _drawPanel = new DrawPanel();
+        
         //set all the frame properties
         this.setTitle("AN Paint");
         this.setSize(height, width);
@@ -44,6 +48,7 @@ public class AppWindow extends JFrame {
         this.setResizable(true);
         this.setVisible(true);
         this.setLocation((dim.width-(this.getSize().width))/2, (dim.height-(this.getSize().height))/2);
+        this.add(_drawPanel);
     }
 
     private void buildMenu() {
