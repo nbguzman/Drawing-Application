@@ -140,7 +140,6 @@
 			    (object Operation "move"
 				quid       	"514750A70327"
 				concurrency 	"Sequential"
-				abstract   	TRUE
 				opExportControl 	"Public"
 				uid        	0)
 			    (object Operation "resize"
@@ -171,10 +170,9 @@
 				supplier   	"Logical View::Composite::Graphic"
 				quidu      	"514744C40276"))
 			class_attributes 	(list class_attribute_list
-			    (object ClassAttribute "_graphicSet"
+			    (object ClassAttribute "Graphic"
 				quid       	"5147481D01DC"
-				type       	"Graphic"
-				quidu      	"514744C40276")))
+				type       	"graphicSet")))
 		    (object Class "Line"
 			quid       	"5147459500B7"
 			superclasses 	(list inheritance_relationship_list
@@ -216,7 +214,7 @@
 			zoom       	100
 			max_height 	28350
 			max_width  	21600
-			origin_x   	187
+			origin_x   	188
 			origin_y   	0
 			items      	(list diagram_item_list
 			    (object ClassView "Class" "Logical View::Composite::Line" @1
@@ -488,10 +486,10 @@
 				    default_color 	TRUE)
 				label      	(object ItemLabel
 				    Parent_View 	@11
-				    location   	(1392, 850)
+				    location   	(1402, 850)
 				    fill_color 	13434879
 				    nlines     	1
-				    max_width  	442
+				    max_width  	422
 				    justify    	0
 				    label      	"Group")
 				icon_style 	"Icon"
@@ -500,7 +498,7 @@
 				quidu      	"5147459D006F"
 				compartment 	(object Compartment
 				    Parent_View 	@11
-				    location   	(1392, 911)
+				    location   	(1402, 911)
 				    font       	(object Font
 					size       	10
 					face       	"Arial"
@@ -514,9 +512,9 @@
 				    fill_color 	13434879
 				    anchor     	2
 				    nlines     	2
-				    max_width  	440
+				    max_width  	431
 				    justify    	1)
-				width      	460
+				width      	440
 				height     	186
 				annotation 	8
 				autoResize 	TRUE)
@@ -572,7 +570,7 @@
 					    (2081, 347)
 					    (2141, 347)
 					    (2141, 928)
-					    (1843, 929))
+					    (1833, 929))
 					line_style 	0)))))))
 	    (object Class_Category "Singleton"
 		quid       	"514746E303CA"
@@ -2368,10 +2366,10 @@
 			    default_color 	TRUE)
 			label      	(object ItemLabel
 			    Parent_View 	@81
-			    location   	(593, 1408)
+			    location   	(604, 1408)
 			    fill_color 	13434879
 			    nlines     	1
-			    max_width  	450
+			    max_width  	428
 			    justify    	0
 			    label      	"Group")
 			icon_style 	"Icon"
@@ -2380,7 +2378,7 @@
 			quidu      	"5147459D006F"
 			compartment 	(object Compartment
 			    Parent_View 	@81
-			    location   	(593, 1513)
+			    location   	(604, 1513)
 			    font       	(object Font
 				size       	10
 				face       	"Arial"
@@ -2394,9 +2392,9 @@
 			    fill_color 	13434879
 			    anchor     	2
 			    nlines     	2
-			    max_width  	447
+			    max_width  	431
 			    justify    	1)
-			width      	468
+			width      	446
 			height     	232
 			annotation 	8
 			autoResize 	TRUE)))))
