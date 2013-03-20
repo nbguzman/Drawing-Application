@@ -1,6 +1,6 @@
 package anpaint.Creators;
 
-import anpaint.Graphics.Triangle;
+import anpaint.Graphics.Graphic;
 import anpaint.Graphics.ShapeEnum;
 
 /**
@@ -9,7 +9,7 @@ import anpaint.Graphics.ShapeEnum;
 public class TriangleShapeCreator extends ShapeCreator {
 
     @Override
-    public Triangle createShape(ShapeEnum shape) {
+    protected Graphic createShape(ShapeEnum shape) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

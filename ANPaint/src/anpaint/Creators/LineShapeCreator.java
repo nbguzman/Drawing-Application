@@ -1,6 +1,6 @@
 package anpaint.Creators;
 
-import anpaint.Graphics.Line;
+import anpaint.Graphics.Graphic;
 import anpaint.Graphics.ShapeEnum;
 
 /**
@@ -9,7 +9,7 @@ import anpaint.Graphics.ShapeEnum;
 public class LineShapeCreator extends ShapeCreator {
 
     @Override
-    public Line createShape(ShapeEnum shape) {
+    protected Graphic createShape(ShapeEnum shape) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
