@@ -1,11 +1,12 @@
-package anpaint.Graphics;
+package anpaint.BasicShapes;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 
 //the Rectangle class is a leaf that describes a rectangle with varying width and height
-public class Rectangle extends Shapes {
+public class Rectangle extends BasicShape {
 
     public Rectangle() {
         this(new Point(),new Point(),new Point(),new Point(),new Color(0),false,0);
@@ -19,22 +20,22 @@ public class Rectangle extends Shapes {
     }
 
     @Override
-    void addGraphic(Shapes g) {
+    void add(BasicShape shape) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    void removeGraphic(Shapes g) {
+    void remove(BasicShape shape) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    ArrayList<Shapes> getChildren() {
+    ArrayList<BasicShape> getChildren() {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    void draw() {
+    void paint(Graphics g) {
         //unfinished implementation
     }
 
@@ -43,13 +44,10 @@ public class Rectangle extends Shapes {
         for (int i = 0; i < _pointSet.length; i++) {
             _pointSet[i].translate(dx, dy);
         }
-
-        draw();
     }
 
     @Override
     void resize() {
         //unfinished implementation
-        draw();
     }
 }

@@ -1,7 +1,7 @@
 package anpaint.Creators;
 
-import anpaint.Graphics.Shapes;
-import anpaint.Graphics.ShapeEnum;
+import anpaint.BasicShapes.BasicShape;
+import anpaint.BasicShapes.ShapeEnum;
 
 /**
  * The RectangleShapeCreator class will create a Rectangle and return it
@@ -9,7 +9,7 @@ import anpaint.Graphics.ShapeEnum;
 public class RectangleShapeCreator extends ShapeCreator {
 
     @Override
-    protected Shapes createShape(ShapeEnum shape) {
+    protected BasicShape createShape(ShapeEnum shape) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

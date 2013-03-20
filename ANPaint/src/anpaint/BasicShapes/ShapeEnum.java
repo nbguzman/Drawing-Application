@@ -1,4 +1,4 @@
-package anpaint.Graphics;
+package anpaint.BasicShapes;
 
 /**
  * Make things simpler so that this will hold the types of shapes that can 

@@ -1,7 +1,7 @@
 package anpaint.Creators;
 
-import anpaint.Graphics.Shapes;
-import anpaint.Graphics.ShapeEnum;
+import anpaint.BasicShapes.BasicShape;
+import anpaint.BasicShapes.ShapeEnum;
 
 /**
  * The ShapeCreator abstract class declares the method to be implemented by the
@@ -12,9 +12,9 @@ import anpaint.Graphics.ShapeEnum;
  */
 public abstract class ShapeCreator{
     
-    protected abstract Shapes createShape(ShapeEnum shape);
+    protected abstract BasicShape createShape(ShapeEnum shape);
     
-    protected Shapes callCreator(ShapeEnum shape) {
+    protected BasicShape callCreator(ShapeEnum shape) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

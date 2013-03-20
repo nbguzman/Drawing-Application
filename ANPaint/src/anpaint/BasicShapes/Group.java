@@ -1,52 +1,49 @@
-package anpaint.Graphics;
+package anpaint.BasicShapes;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 
 //the Group class a composite object which contains all leafs that are grouped together
-public class Group extends Shapes{
+public class Group extends BasicShape{
     //the contained children graphics
-    private ArrayList<Shapes> _graphicSet;
+    private ArrayList<BasicShape> _graphicSet;
 
     public Group() {
-        _graphicSet = new ArrayList<Shapes>();
+        _graphicSet = new ArrayList<BasicShape>();
     }
 
     @Override
-    void addGraphic(Shapes g) {
-        _graphicSet.add(g);
+    void add(BasicShape shape) {
+        _graphicSet.add(shape);
     }
 
     @Override
-    void removeGraphic(Shapes g) {
-        _graphicSet.remove(g);
+    void remove(BasicShape shape) {
+        _graphicSet.remove(shape);
     }
 
     @Override
-    ArrayList<Shapes> getChildren() {
+    ArrayList<BasicShape> getChildren() {
         return _graphicSet;
     }
 
     @Override
-    void draw() {
+    void paint(Graphics g) {
         for (int i = 0; i < _graphicSet.size(); i++)
-            _graphicSet.get(i).draw();
+            _graphicSet.get(i).paint(g);
     }
 
     @Override
     void move(int dx, int dy) {
         for (int i = 0; i < _graphicSet.size(); i++)
             _graphicSet.get(i).move(dx, dy);
-
-        draw();
     }
 
     @Override
     void resize() {
         for (int i = 0; i < _graphicSet.size(); i++)
             _graphicSet.get(i).resize();
-
-        draw();
     }
 }
