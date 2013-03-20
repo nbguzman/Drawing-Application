@@ -20,8 +20,9 @@ public class LoadCommand implements Command {
         
     }
     
+    // Will not be implemented - should not undo a Load
     public void undo() {
-        
+        throw new UnsupportedOperationException("Cannot undo a load command");
     }
     
     // Will not be implemented - cannot redo a Load

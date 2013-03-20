@@ -7,6 +7,10 @@ import java.util.ArrayList;
 //the Triangle class is a leaf that describes an equilateral triangle
 public class Triangle extends Graphic{
 
+    public Triangle() {
+        this(new Point(),new Point(),new Point(),new Color(0),false,0);
+    }
+    
     public Triangle(Point p1, Point p2, Point p3, Color colour, boolean style, int weight) {
         _pointSet = new Point[] {p1, p2, p3};
         _colour = colour;
