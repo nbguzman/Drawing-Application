@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 //the Line class is a leaf that describes a straight line
-public class Line extends Graphic {
+public class Line extends Shapes {
 
     public Line() {
         this(new Point(),new Point(),new Color(0),false,0);
@@ -19,17 +19,17 @@ public class Line extends Graphic {
     }
 
     @Override
-    void addGraphic(Graphic g) {
+    void addGraphic(Shapes g) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    void removeGraphic(Graphic g) {
+    void removeGraphic(Shapes g) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    ArrayList<Graphic> getChildren() {
+    ArrayList<Shapes> getChildren() {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 

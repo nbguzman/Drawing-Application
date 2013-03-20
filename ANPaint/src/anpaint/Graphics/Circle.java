@@ -9,7 +9,7 @@ import java.util.ArrayList;
 * the Circle class needs a radius to know how to draw
 * the containing point in its _pointSet is the centroid
 */
-public class Circle extends Graphic{
+public class Circle extends Shapes{
 
     private int _radius;
 
@@ -26,17 +26,17 @@ public class Circle extends Graphic{
     }
 
     @Override
-    void addGraphic(Graphic g) {
+    void addGraphic(Shapes g) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    void removeGraphic(Graphic g) {
+    void removeGraphic(Shapes g) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    ArrayList<Graphic> getChildren() {
+    ArrayList<Shapes> getChildren() {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 

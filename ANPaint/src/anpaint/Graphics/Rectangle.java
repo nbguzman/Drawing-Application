@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 //the Rectangle class is a leaf that describes a rectangle with varying width and height
-public class Rectangle extends Graphic {
+public class Rectangle extends Shapes {
 
     public Rectangle() {
         this(new Point(),new Point(),new Point(),new Point(),new Color(0),false,0);
@@ -19,17 +19,17 @@ public class Rectangle extends Graphic {
     }
 
     @Override
-    void addGraphic(Graphic g) {
+    void addGraphic(Shapes g) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    void removeGraphic(Graphic g) {
+    void removeGraphic(Shapes g) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    ArrayList<Graphic> getChildren() {
+    ArrayList<Shapes> getChildren() {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 

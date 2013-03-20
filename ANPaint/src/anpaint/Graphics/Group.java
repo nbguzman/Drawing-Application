@@ -5,26 +5,26 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 //the Group class a composite object which contains all leafs that are grouped together
-public class Group extends Graphic{
+public class Group extends Shapes{
     //the contained children graphics
-    private ArrayList<Graphic> _graphicSet;
+    private ArrayList<Shapes> _graphicSet;
 
     public Group() {
-        _graphicSet = new ArrayList<Graphic>();
+        _graphicSet = new ArrayList<Shapes>();
     }
 
     @Override
-    void addGraphic(Graphic g) {
+    void addGraphic(Shapes g) {
         _graphicSet.add(g);
     }
 
     @Override
-    void removeGraphic(Graphic g) {
+    void removeGraphic(Shapes g) {
         _graphicSet.remove(g);
     }
 
     @Override
-    ArrayList<Graphic> getChildren() {
+    ArrayList<Shapes> getChildren() {
         return _graphicSet;
     }
 
