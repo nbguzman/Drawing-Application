@@ -14,6 +14,10 @@ public class Circle extends BasicShape{
 
     private int _radius;
 
+    public Circle() {
+        this(new Point(),0,new Color(0),false,0);
+    }
+    
     public Circle(Point p1, int radius, Color colour, boolean style, int weight) {
         _pointSet = new Point[] {p1};
         _radius = radius;
