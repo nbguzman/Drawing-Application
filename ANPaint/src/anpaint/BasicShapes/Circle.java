@@ -17,13 +17,14 @@ public class Circle extends BasicShape{
     public Circle() {
         this(new Point(),0,new Color(0),false,0);
     }
-    
+
     public Circle(Point p1, int radius, Color colour, boolean style, int weight) {
         _pointSet = new Point[] {p1};
         _radius = radius;
         _colour = colour;
         _style = style;
         _weight = weight;
+        _selected = false;
     }
 
     @Override
@@ -42,17 +43,22 @@ public class Circle extends BasicShape{
     }
 
     @Override
-    void paint(Graphics g) {
+    public void draw(Graphics g) {
         //unfinished implementation
     }
 
     @Override
-    void move(int dx, int dy) {
+    void moveShape(int dx, int dy) {
         _pointSet[0].translate(dx, dy);
     }
 
     @Override
     void resize() {
         //unfinished implementation
+    }
+
+    @Override
+    void toggleSelected() {
+        _selected = !_selected;
     }
 }

@@ -37,10 +37,10 @@ public class AppWindow extends JFrame {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         int height = (int)(dim.width * 0.8);
         int width = (int)(dim.height * 0.8);
-               
+
         //instantiate a panel to draw shapes on
         _drawPanel = new DrawPanel();
-        
+
         //set all the frame properties
         this.setTitle("AN Paint");
         this.setSize(height, width);
@@ -173,8 +173,7 @@ public class AppWindow extends JFrame {
     }
 
     //changes the maximum size of a java component, so it doesn't stretch to fill the layout
-    private void setMaxSize(JComponent jc)
-    {
+    private void setMaxSize(JComponent jc) {
         Dimension max = jc.getMaximumSize();
         Dimension pref = jc.getPreferredSize();
         max.height = pref.height;

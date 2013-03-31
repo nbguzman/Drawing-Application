@@ -11,12 +11,14 @@ public class Line extends BasicShape {
     public Line() {
         this(new Point(),new Point(),new Color(0),false,0);
     }
-    
+
     public Line(Point p1, Point p2, Color colour, boolean style, int weight) {
         _pointSet = new Point[] {p1, p2};
         _colour = colour;
         _style = style;
         _weight = weight;
+        _selected = false;
+
     }
 
     @Override
@@ -35,12 +37,12 @@ public class Line extends BasicShape {
     }
 
     @Override
-    void paint(Graphics g) {
+    public void draw(Graphics g) {
         //unfinished implementation
     }
 
     @Override
-    void move(int dx, int dy) {
+    void moveShape(int dx, int dy) {
         for (int i = 0; i < _pointSet.length; i++) {
             _pointSet[i].translate(dx, dy);
         }
@@ -49,5 +51,10 @@ public class Line extends BasicShape {
     @Override
     void resize() {
         //unfinished implementation
+    }
+
+    @Override
+    void toggleSelected() {
+        _selected = !_selected;
     }
 }
