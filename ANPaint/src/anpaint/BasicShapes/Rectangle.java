@@ -9,17 +9,15 @@ import java.util.ArrayList;
 public class Rectangle extends BasicShape {
 
     public Rectangle() {
-        this(new Point(),new Point(),new Point(),new Point(),new Color(0),false,0,0,0);
+        this(new Point(),new Point(),new Color(0),false,0);
     }
 
-    public Rectangle(Point p1, Point p2, Point p3, Point p4, Color colour, boolean style, int weight, int x, int y) {
-        _pointSet = new Point[] {p1, p2, p3, p4};
+    public Rectangle(Point p1, Point p2, Color colour, boolean style, int weight) {
+        _pointSet = new Point[] {p1, p2};
         _colour = colour;
         _style = style;
         _weight = weight;
         _selected = false;
-        _x = x;
-        _y = y;
     }
 
     @Override
@@ -40,7 +38,7 @@ public class Rectangle extends BasicShape {
     @Override
     public void draw(Graphics g) {
         g.setColor(_colour);
-        g.drawRect(_x, _y, 100, 100);
+        g.drawRect(_pointSet[0].x, _pointSet[0].y, _pointSet[1].x - _pointSet[0].x, _pointSet[1].y - _pointSet[0].y);
     }
 
     @Override

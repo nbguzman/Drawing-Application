@@ -10,9 +10,6 @@ public abstract class BasicShape extends Object {
     protected boolean _style; //true solid, false dotted
     protected int _weight;
     protected boolean _selected;
-    protected int _x;
-    protected int _y;
-
 
     //the method definitions that must be implemented in the sub classes
     abstract void add(BasicShape shape);

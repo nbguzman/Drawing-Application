@@ -11,6 +11,8 @@ public class AppWindow extends JFrame {
     private static AppWindow _instance;
     //data used within the class
     DrawPanel _drawPanel;
+    JComboBox _shapesDDL;
+    JComboBox _colourDDL;
     private String[] _shapes = { "Line", "Rectangle", "Circle", "Triangle" };
     private String[] _colours = { "Black", "Red", "Green", "Blue" };
     private String[] _weight = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
@@ -29,6 +31,15 @@ public class AppWindow extends JFrame {
         if (_instance == null)
             _instance = new AppWindow();
         return _instance;
+    }
+
+    //getters
+    public String getShapeType() {
+        return _shapesDDL.getSelectedItem().toString();
+    }
+
+    public String getColour() {
+        return _colourDDL.getSelectedItem().toString();
     }
 
     //window constructing methods
@@ -95,8 +106,6 @@ public class AppWindow extends JFrame {
 
     private void buildToolbar() {
         JToolBar _toolBar;
-        JComboBox _shapesDDL;
-        JComboBox _colourDDL;
         JComboBox _lineWeightDDL;
         JComboBox _lineStyleDDL;
         JButton _shapeTool;

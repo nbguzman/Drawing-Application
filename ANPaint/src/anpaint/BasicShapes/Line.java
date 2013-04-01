@@ -18,7 +18,6 @@ public class Line extends BasicShape {
         _style = style;
         _weight = weight;
         _selected = false;
-
     }
 
     @Override
@@ -38,7 +37,8 @@ public class Line extends BasicShape {
 
     @Override
     public void draw(Graphics g) {
-        //unfinished implementation
+        g.setColor(_colour);
+        g.drawLine(_pointSet[0].x, _pointSet[0].y, _pointSet[1].x, _pointSet[1].y);
     }
 
     @Override
