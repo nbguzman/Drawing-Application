@@ -1,5 +1,7 @@
 package anpaint.Commands;
 
+import anpaint.DrawPanel;
+
 /**
  * The ExitCommand class will handle the exiting of the application. It should
  * exit gracefully
@@ -10,12 +12,14 @@ package anpaint.Commands;
  * This is part of the Command Pattern
  */
 public class ExitCommand implements Command {
-    public ExitCommand() {
-        
+    DrawPanel __drawPanel;
+    
+    public ExitCommand(DrawPanel dp) {
+        __drawPanel = dp;
     }
     
     public void execute() {
-        
+        __drawPanel.exit();
     }
     
     // Not to be implemented - pointless

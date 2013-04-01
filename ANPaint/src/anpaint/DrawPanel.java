@@ -24,7 +24,8 @@ public class DrawPanel extends JPanel {
     }
     
     public void exit() {
-        
+        // maybe clear some stuff before executing the line below?
+        System.exit(0);
     }
     
     public void copy() {

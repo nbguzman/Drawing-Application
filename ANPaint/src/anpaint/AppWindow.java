@@ -1,5 +1,6 @@
 package anpaint;
 
+import anpaint.Commands.Invokers.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -71,6 +72,11 @@ public class AppWindow extends JFrame {
         _load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         _exit = new JMenuItem("Exit");
         _exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+        
+        //add invokers (actionlisteners) to menuitems
+        _exit.addActionListener(new InvokeExit(_drawPanel));
+        
+        //add menuitems to menu
         _file.add(_save);
         _file.add(_load);
         _file.add(_exit);
