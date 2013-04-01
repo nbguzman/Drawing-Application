@@ -37,8 +37,56 @@ public class Line extends BasicShape {
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(_colour);
-        g.drawLine(_pointSet[0].x, _pointSet[0].y, _pointSet[1].x, _pointSet[1].y);
+        /**
+         * The draw for line is complicated due to the nature of how it is affected by thickness
+         * The additional thickness lines must be drawn either vertically or horizontally depending on the direction of the line
+         * The calculations determine the angle the the line makes with a hypothetical triangle,
+         * and depending on that angle it will either draw the additional thickness lines either vertically or horizontally
+         */
+        int adjacent = _pointSet[1].x - _pointSet[0].x;
+        int opposite = _pointSet[1].y - _pointSet[0].y;
+
+        if (adjacent < 0)
+            adjacent *= -1;
+        if (opposite < 0)
+            opposite *= -1;
+
+        double theta = 0;
+
+        if (adjacent != 0)
+            theta = Math.toDegrees(Math.atan(opposite / adjacent));
+
+        if (theta != 0) {
+            if (theta > 45) {
+                for (int i = 0; i < _weight; i++) {
+                    g.setColor(_colour);
+                    g.drawLine(_pointSet[0].x + i, _pointSet[0].y, _pointSet[1].x + i, _pointSet[1].y);
+                }
+            }
+
+            else {
+                for (int i = 0; i < _weight; i++) {
+                    g.setColor(_colour);
+                    g.drawLine(_pointSet[0].x, _pointSet[0].y + i, _pointSet[1].x, _pointSet[1].y + i);
+                }
+            }
+        }
+
+        else {
+            if (adjacent == 0) {
+                for (int i = 0; i < _weight; i++) {
+                    g.setColor(_colour);
+                    g.drawLine(_pointSet[0].x + i, _pointSet[0].y, _pointSet[1].x + i, _pointSet[1].y);
+                }
+            }
+
+            else {
+                for (int i = 0; i < _weight; i++) {
+                    g.setColor(_colour);
+                    g.drawLine(_pointSet[0].x, _pointSet[0].y + i, _pointSet[1].x, _pointSet[1].y + i);
+                }
+            }
+        }
     }
 
     @Override

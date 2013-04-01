@@ -1,7 +1,10 @@
 package anpaint.Creators;
 
+import anpaint.AppWindow;
 import anpaint.BasicShapes.BasicShape;
 import anpaint.BasicShapes.ShapeEnum;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
 
 /**
  * The GroupCreator class will create a Group and return it
@@ -9,8 +12,7 @@ import anpaint.BasicShapes.ShapeEnum;
 public class GroupCreator extends ShapeCreator {
 
     @Override
-    protected BasicShape createShape(ShapeEnum shape) {
+    public BasicShape createShape(Point point, MouseEvent e, AppWindow window) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
 }
