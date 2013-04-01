@@ -12,6 +12,10 @@ public class AppWindow extends JFrame {
     private static AppWindow _instance;
     //data used within the class
     DrawPanel _drawPanel;
+    JComboBox _shapesDDL;
+    JComboBox _colourDDL;
+    JComboBox _lineWeightDDL;
+    JComboBox _lineStyleDDL;
     private String[] _shapes = { "Line", "Rectangle", "Circle", "Triangle" };
     private String[] _colours = { "Black", "Red", "Green", "Blue" };
     private String[] _weight = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
@@ -19,6 +23,7 @@ public class AppWindow extends JFrame {
 
     //singleton related methods
     private AppWindow() {
+        _instance = this;
         buildFrame();
         buildMenu();
         buildToolbar();
@@ -32,16 +37,68 @@ public class AppWindow extends JFrame {
         return _instance;
     }
 
+    //getters
+    public String getShapeType() {
+        return _shapesDDL.getSelectedItem().toString();
+    }
+
+    public String getColour() {
+        return _colourDDL.getSelectedItem().toString();
+    }
+    
+    public boolean getLineType() {
+        return _lineStyleDDL.getSelectedItem().toString().equals("Solid") ? true : false;
+    }
+    
+    public int getWeight() {
+        int returnValue = 0;
+        
+        switch (_lineWeightDDL.getSelectedItem().toString()) {
+            case "1":
+                returnValue = 1;
+                break;
+            case "2":
+                returnValue = 2;
+                break;
+            case "3":
+                returnValue = 3;
+                break;
+            case "4":
+                returnValue = 4;
+                break;
+            case "5":
+                returnValue = 5;
+                break;
+            case "6":
+                returnValue = 6;
+                break;
+            case "7":
+                returnValue = 7;
+                break;
+            case "8":
+                returnValue = 8;
+                break;
+            case "9":
+                returnValue = 9;
+                break;
+            case "10":
+                returnValue = 10;
+                break;
+        }
+        
+        return returnValue;
+    }
+
     //window constructing methods
     private void buildFrame() {
         //the window positioning values
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         int height = (int)(dim.width * 0.8);
         int width = (int)(dim.height * 0.8);
-               
+
         //instantiate a panel to draw shapes on
-        _drawPanel = new DrawPanel();
-        
+        _drawPanel = new DrawPanel(_instance);
+
         //set all the frame properties
         this.setTitle("AN Paint");
         this.setSize(height, width);
@@ -101,10 +158,6 @@ public class AppWindow extends JFrame {
 
     private void buildToolbar() {
         JToolBar _toolBar;
-        JComboBox _shapesDDL;
-        JComboBox _colourDDL;
-        JComboBox _lineWeightDDL;
-        JComboBox _lineStyleDDL;
         JButton _shapeTool;
         JButton _group;
         JButton _ungroup;
@@ -179,8 +232,7 @@ public class AppWindow extends JFrame {
     }
 
     //changes the maximum size of a java component, so it doesn't stretch to fill the layout
-    private void setMaxSize(JComponent jc)
-    {
+    private void setMaxSize(JComponent jc) {
         Dimension max = jc.getMaximumSize();
         Dimension pref = jc.getPreferredSize();
         max.height = pref.height;

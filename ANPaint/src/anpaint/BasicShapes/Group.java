@@ -30,20 +30,26 @@ public class Group extends BasicShape{
     }
 
     @Override
-    void paint(Graphics g) {
+    public void draw(Graphics g) {
         for (int i = 0; i < _graphicSet.size(); i++)
-            _graphicSet.get(i).paint(g);
+            _graphicSet.get(i).draw(g);
     }
 
     @Override
-    void move(int dx, int dy) {
+    void moveShape(int dx, int dy) {
         for (int i = 0; i < _graphicSet.size(); i++)
-            _graphicSet.get(i).move(dx, dy);
+            _graphicSet.get(i).moveShape(dx, dy);
     }
 
     @Override
     void resize() {
         for (int i = 0; i < _graphicSet.size(); i++)
             _graphicSet.get(i).resize();
+    }
+
+    @Override
+    void toggleSelected() {
+        for (int i =0; i < _graphicSet.size(); i++)
+            _graphicSet.get(i).toggleSelected();
     }
 }
