@@ -44,8 +44,10 @@ public class Circle extends BasicShape{
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(_colour);
-        g.drawOval(_pointSet[0].x, _pointSet[0].y, _radius * 2, _radius * 2);
+        for (int i = 0; i < _weight; i++) {
+            g.setColor(_colour);
+            g.drawOval(_pointSet[0].x + i, _pointSet[0].y + i, (_radius - i) * 2, (_radius - i) * 2);
+        }
     }
 
     @Override

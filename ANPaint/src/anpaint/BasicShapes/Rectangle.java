@@ -37,8 +37,10 @@ public class Rectangle extends BasicShape {
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(_colour);
-        g.drawRect(_pointSet[0].x, _pointSet[0].y, _pointSet[1].x - _pointSet[0].x, _pointSet[1].y - _pointSet[0].y);
+        for (int i = 0; i < _weight; i++) {
+            g.setColor(_colour);
+            g.drawRect(_pointSet[0].x + i, _pointSet[0].y + i, _pointSet[1].x - _pointSet[0].x - (i * 2), _pointSet[1].y - _pointSet[0].y - (i * 2));
+        }
     }
 
     @Override

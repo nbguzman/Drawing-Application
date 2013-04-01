@@ -13,6 +13,8 @@ public class AppWindow extends JFrame {
     DrawPanel _drawPanel;
     JComboBox _shapesDDL;
     JComboBox _colourDDL;
+    JComboBox _lineWeightDDL;
+    JComboBox _lineStyleDDL;
     private String[] _shapes = { "Line", "Rectangle", "Circle", "Triangle" };
     private String[] _colours = { "Black", "Red", "Green", "Blue" };
     private String[] _weight = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
@@ -20,6 +22,7 @@ public class AppWindow extends JFrame {
 
     //singleton related methods
     private AppWindow() {
+        _instance = this;
         buildFrame();
         buildMenu();
         buildToolbar();
@@ -41,6 +44,49 @@ public class AppWindow extends JFrame {
     public String getColour() {
         return _colourDDL.getSelectedItem().toString();
     }
+    
+    public boolean getLineType() {
+        return _lineStyleDDL.getSelectedItem().toString().equals("Solid") ? true : false;
+    }
+    
+    public int getWeight() {
+        int returnValue = 0;
+        
+        switch (_lineWeightDDL.getSelectedItem().toString()) {
+            case "1":
+                returnValue = 1;
+                break;
+            case "2":
+                returnValue = 2;
+                break;
+            case "3":
+                returnValue = 3;
+                break;
+            case "4":
+                returnValue = 4;
+                break;
+            case "5":
+                returnValue = 5;
+                break;
+            case "6":
+                returnValue = 6;
+                break;
+            case "7":
+                returnValue = 7;
+                break;
+            case "8":
+                returnValue = 8;
+                break;
+            case "9":
+                returnValue = 9;
+                break;
+            case "10":
+                returnValue = 10;
+                break;
+        }
+        
+        return returnValue;
+    }
 
     //window constructing methods
     private void buildFrame() {
@@ -50,7 +96,7 @@ public class AppWindow extends JFrame {
         int width = (int)(dim.height * 0.8);
 
         //instantiate a panel to draw shapes on
-        _drawPanel = new DrawPanel();
+        _drawPanel = new DrawPanel(_instance);
 
         //set all the frame properties
         this.setTitle("AN Paint");
@@ -106,8 +152,6 @@ public class AppWindow extends JFrame {
 
     private void buildToolbar() {
         JToolBar _toolBar;
-        JComboBox _lineWeightDDL;
-        JComboBox _lineStyleDDL;
         JButton _shapeTool;
         JButton _group;
         JButton _ungroup;

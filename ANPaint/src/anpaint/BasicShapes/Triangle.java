@@ -7,16 +7,14 @@ import java.util.ArrayList;
 
 //the Triangle class is a leaf that describes an equilateral triangle
 public class Triangle extends BasicShape{
-    int _xSet[];
-    int _ySet[];
+
 
     public Triangle() {
         this(new Point(),new Point(),new Point(),new Color(0),false,0);
     }
 
     public Triangle(Point p1, Point p2, Point p3, Color colour, boolean style, int weight) {
-        _xSet = new int[] { p1.x, p2.x, p3.x };
-        _ySet = new int[] { p1.y, p2.y, p3.y };
+        _pointSet = new Point[] { p1, p2, p3 };
         _colour = colour;
         _style = style;
         _weight = weight;
@@ -40,8 +38,16 @@ public class Triangle extends BasicShape{
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(_colour);
-        g.drawPolygon(_xSet, _ySet, 3);
+        int _xSet[];
+        int _ySet[];
+    
+        for (int i = 0; i < _weight; i++) {
+            _xSet = new int[] { _pointSet[0].x, _pointSet[1].x + i, _pointSet[2].x - i };
+            _ySet = new int[] { _pointSet[0].y + i, _pointSet[1].y - i, _pointSet[2].y - i };
+            
+            g.setColor(_colour);
+            g.drawPolygon(_xSet, _ySet, 3);
+        }
     }
 
     @Override
