@@ -9,14 +9,15 @@ import java.util.ArrayList;
 public class Rectangle extends BasicShape {
 
     public Rectangle() {
-        this(new Point(),new Point(),new Point(),new Point(),new Color(0),false,0);
+        this(new Point(),new Point(),new Color(0),false,0);
     }
-    
-    public Rectangle(Point p1, Point p2, Point p3, Point p4, Color colour, boolean style, int weight) {
-        _pointSet = new Point[] {p1, p2, p3, p4};
+
+    public Rectangle(Point p1, Point p2, Color colour, boolean style, int weight) {
+        _pointSet = new Point[] {p1, p2};
         _colour = colour;
         _style = style;
         _weight = weight;
+        _selected = false;
     }
 
     @Override
@@ -35,12 +36,15 @@ public class Rectangle extends BasicShape {
     }
 
     @Override
-    void paint(Graphics g) {
-        //unfinished implementation
+    public void draw(Graphics g) {
+        for (int i = 0; i < _weight; i++) {
+            g.setColor(_colour);
+            g.drawRect(_pointSet[0].x + i, _pointSet[0].y + i, _pointSet[1].x - _pointSet[0].x - (i * 2), _pointSet[1].y - _pointSet[0].y - (i * 2));
+        }
     }
 
     @Override
-    void move(int dx, int dy) {
+    void moveShape(int dx, int dy) {
         for (int i = 0; i < _pointSet.length; i++) {
             _pointSet[i].translate(dx, dy);
         }
@@ -49,5 +53,10 @@ public class Rectangle extends BasicShape {
     @Override
     void resize() {
         //unfinished implementation
+    }
+
+    @Override
+    void toggleSelected() {
+        _selected = !_selected;
     }
 }
