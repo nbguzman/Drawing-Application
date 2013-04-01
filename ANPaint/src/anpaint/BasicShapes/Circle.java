@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /*
 * the Circle class is a leaf that describes a circle
 * the Circle class needs a radius to know how to paint
-* the containing point in its _pointSet is the centroid
+* the containing point in its _pointSet is the top left corner (of a containing square)
 */
 public class Circle extends BasicShape{
 

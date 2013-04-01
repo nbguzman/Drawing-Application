@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JPanel;
+import java.lang.Math;
 
 /**
  * The DrawPanel class will contain the implementations of the various commands
@@ -44,17 +45,41 @@ public class DrawPanel extends JPanel {
             public void mouseReleased (MouseEvent e) {
 //                Rectangle rect = new Rectangle(_point,new Point(e.getX(),e.getY()),Color.black,true,1);
 //                _shapeSet.add(rect);
-//                repaint();
 
 //                Line line = new Line(_point,new Point(e.getX(),e.getY()),Color.black,true,1);
 //                _shapeSet.add(line);
-//                repaint();
 
-//  incomplete
-//                Point released = new Point(e.getX(),e.getY());
-//                int radius =
-//                Point centroid = new Point(_point.x - released.x, _point.y - released.y);
-//                Circle circle = new Circle();
+//                int radius = (int) Math.sqrt(Math.pow(_point.x - e.getX(), 2) + Math.pow(_point.y - e.getY(), 2));
+//                Circle circle = new Circle(new Point(_point.x - radius, _point.y - radius), radius, Color.black, true, 1);
+//                _shapeSet.add(circle);
+
+                int height = e.getY() - _point.y;
+                Triangle tri = new Triangle(_point, new Point(_point.x - height / 2, _point.y + height), new Point(_point.x + height / 2, _point.y + height), Color.black, true, 1);
+                _shapeSet.add(tri);
+
+                repaint();
+
+//                BasicShape shape;
+//
+//                switch (_window.getShapeType()) {
+//                    case "Rectangle":
+//                        shape = new Rectangle(_point,new Point(e.getX(),e.getY()),Color.black,true,1);
+//                        break;
+//                    case "Triangle":
+//                        int height = e.getY() - _point.y;
+//                        shape = new Triangle(_point, new Point(_point.x - height / 2, _point.y + height), new Point(_point.x + height / 2, _point.y + height), Color.black, true, 1);
+//                        break;
+//                    case "Circle":
+//                        int radius = (int) Math.sqrt(Math.pow(_point.x - e.getX(), 2) + Math.pow(_point.y - e.getY(), 2));
+//                        shape = new Circle(new Point(_point.x - radius, _point.y - radius), radius, Color.black, true, 1);
+//                        break;
+//                    case "Line":
+//                        shape = new Line(_point,new Point(e.getX(),e.getY()),Color.black,true,1);
+//                        break;
+//                }
+//
+//                _shapeSet.add(shape);
+//                repaint();
             }
         });
     }
