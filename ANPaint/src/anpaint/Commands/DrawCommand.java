@@ -13,13 +13,15 @@ import java.util.ArrayList;
 public class DrawCommand implements Command {
     DrawPanel __drawPanel;
     ArrayList<BasicShape> _current;
+    ArrayList<BasicShape> _backup;
     
     //initialize the DrawPanel and the current ShapeSet that drawpanel has
     //set the drawpanel's backupset to what it currently is
     public DrawCommand(DrawPanel dp) {
         __drawPanel = dp;
-        _current = __drawPanel.getCurrentSet();
-        __drawPanel.setBackupSet(_current);
+        _current = new ArrayList<>(__drawPanel.getCurrentSet());
+        __drawPanel.setBackupSet(_current); 
+        _backup = new ArrayList<>(__drawPanel.getBackupSet());
     }
     
     //set the current set to what it currently is, essentially repainting it
@@ -28,15 +30,10 @@ public class DrawCommand implements Command {
         __drawPanel.setCurrentSet(_current);
     }
     
-    //set the backup set to what it was currently then undo the draw
-    /*
-     * *NOTE*: reason why redo doesn't work more than once is because when
-     * you undo, it creates a backup of what it is CURRENTLY. It forgets the
-     * backup it made from before
-     */
+    //set the backup set to what it was before then undo the draw
     @Override
     public void undo() {
-        __drawPanel.setBackupSet(_current);
+        __drawPanel.setBackupSet(_backup);
         __drawPanel.undoDraw();
     }
     
@@ -45,7 +42,7 @@ public class DrawCommand implements Command {
     @Override
     public void redo() {
         _current = __drawPanel.getBackupSet();
-        __drawPanel.setCurrentSet(_current);
+        __drawPanel.setCurrentSet(_backup);
         __drawPanel.setBackupSet(_current);
     }
 }
