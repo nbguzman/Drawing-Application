@@ -1,8 +1,11 @@
 package anpaint;
 
+import anpaint.Commands.Command;
+import anpaint.Commands.Invokers.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Stack;
 
 //singleton pattern
 //this class will handle the application window and the button events
@@ -19,9 +22,14 @@ public class AppWindow extends JFrame {
     private String[] _colours = { "Black", "Red", "Green", "Blue" };
     private String[] _weight = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
     private String[] _style = { "Solid", "Dashed" };
+    //a "history" of commands
+    public Stack<Command> _cmds;
+    public Stack<Command> _cmdsBackup;
 
     //singleton related methods
     private AppWindow() {
+        _cmds = new Stack<>();
+        _cmdsBackup = new Stack<>();
         _instance = this;
         buildFrame();
         buildMenu();
@@ -34,6 +42,15 @@ public class AppWindow extends JFrame {
         if (_instance == null)
             _instance = new AppWindow();
         return _instance;
+    }
+    
+    //clear backup (cannot redo when something new is done)
+    public void clearBackup() {
+        _cmdsBackup.clear();
+    }
+    
+    public void addCommand(Command cmd) {
+        _cmds.add(cmd);
     }
 
     //getters
@@ -128,6 +145,11 @@ public class AppWindow extends JFrame {
         _load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         _exit = new JMenuItem("Exit");
         _exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+        
+        //pass in the receiver, the command list, and type of command to create
+        _exit.addActionListener(new InvokeExit(_drawPanel));
+        
+        //add menuitems to menu
         _file.add(_save);
         _file.add(_load);
         _file.add(_exit);
@@ -141,6 +163,38 @@ public class AppWindow extends JFrame {
         _undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
         _redo = new JMenuItem("Redo");
         _redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
+        
+        //undo the last commands
+        //have to use anonymous inner class to access _cmds
+        _undo.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //place undos into a command history to be able to
+                //redo the commands within that history
+                if (!_cmds.isEmpty())
+                {
+                    _cmdsBackup.add(_cmds.pop());
+                    int i = _cmdsBackup.size() - 1;
+                    _cmdsBackup.get(i).undo();
+                }
+            }
+        });
+        
+        //redo the last commands
+        //have to use anonymous inner class to access _cmds
+        _redo.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //execute the redo of the latest command stored in the history
+                if (!_cmdsBackup.isEmpty())
+                {
+                    _cmds.add(_cmdsBackup.pop());
+                    int i = _cmds.size() - 1;
+                    _cmds.get(i).redo();
+                }
+            }
+        });
+        
         _edit.add(_copy);
         _edit.add(_paste);
         _edit.add(_undo);
