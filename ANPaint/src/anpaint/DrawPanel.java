@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import java.lang.Math;
+import java.util.Collections;
 
 /**
  * The DrawPanel class will contain the implementations of the various commands
@@ -80,7 +81,7 @@ public class DrawPanel extends JPanel {
     }
     
     public void redoDraw(ArrayList<BasicShape> bs) {
-        _shapeSet = bs;
+        _shapeSet = new ArrayList<>(bs);
         repaint();
     }
     
@@ -89,7 +90,7 @@ public class DrawPanel extends JPanel {
     }
     
     public void setCurrentSet(ArrayList<BasicShape> source) {
-        _shapeSet = source;
+        _shapeSet = new ArrayList<>(source);
         repaint();
     }
     
@@ -98,7 +99,7 @@ public class DrawPanel extends JPanel {
     }
     
     public void setBackupSet(ArrayList<BasicShape> source) {
-        _backup = source;
+        _backup = new ArrayList<>(source);
         repaint();
     }
     

@@ -14,11 +14,11 @@ import java.util.ArrayList;
  */
 public class DrawCommand implements Command {
     DrawPanel __drawPanel;
-    ArrayList<BasicShape> _backup;
+    ArrayList<BasicShape> _current;
     
     public DrawCommand(DrawPanel dp) {
         __drawPanel = dp;
-        _backup = __drawPanel.getCurrentSet();
+        _current = __drawPanel.getCurrentSet();
     }
     
     public void execute() {
@@ -27,10 +27,12 @@ public class DrawCommand implements Command {
     
     // Not to be implemented - pointless
     public void undo() {
+        __drawPanel.setBackupSet(_current);
         __drawPanel.undoDraw();
     }
     
     public void redo() {
-        __drawPanel.redoDraw(_backup);
+        _current = __drawPanel.getBackupSet();
+        __drawPanel.setCurrentSet(_current);
     }
 }
