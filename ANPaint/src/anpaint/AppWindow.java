@@ -1,9 +1,11 @@
 package anpaint;
 
+import anpaint.Commands.Command;
 import anpaint.Commands.Invokers.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Stack;
 
 //singleton pattern
 //this class will handle the application window and the button events
@@ -20,9 +22,14 @@ public class AppWindow extends JFrame {
     private String[] _colours = { "Black", "Red", "Green", "Blue" };
     private String[] _weight = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
     private String[] _style = { "Solid", "Dashed" };
+    //a "history" of commands
+    public Stack<Command> _cmds;
+    public Stack<Command> _cmdsBackup;
 
     //singleton related methods
     private AppWindow() {
+        _cmds = new Stack<Command>();
+        _cmdsBackup = new Stack<Command>();
         _instance = this;
         buildFrame();
         buildMenu();
@@ -130,7 +137,7 @@ public class AppWindow extends JFrame {
         _exit = new JMenuItem("Exit");
         _exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
         
-        //add invokers (actionlisteners) to menuitems
+        //pass in the receiver, the command list, and type of command to create
         _exit.addActionListener(new InvokeExit(_drawPanel));
         
         //add menuitems to menu
@@ -147,6 +154,31 @@ public class AppWindow extends JFrame {
         _undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
         _redo = new JMenuItem("Redo");
         _redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
+        
+        //undo the last commands
+        _undo.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                if (!_cmds.isEmpty())
+                {
+                    _cmdsBackup.add(_cmds.pop());
+                    int i = _cmdsBackup.size() - 1;
+                    _cmdsBackup.get(i).undo();
+                }
+            }
+        });
+        
+        //redo the last commands
+        _redo.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                if (!_cmdsBackup.isEmpty())
+                {
+                    _cmds.add(_cmdsBackup.pop());
+                    int i = _cmds.size() - 1;
+                    _cmds.get(i).redo();
+                }
+            }
+        });
+        
         _edit.add(_copy);
         _edit.add(_paste);
         _edit.add(_undo);

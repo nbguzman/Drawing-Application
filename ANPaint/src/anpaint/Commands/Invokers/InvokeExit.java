@@ -4,6 +4,7 @@ import anpaint.Commands.*;
 import anpaint.DrawPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Stack;
 
 /**
  * The InvokeExit class acts as an invoker that creates and executes the
