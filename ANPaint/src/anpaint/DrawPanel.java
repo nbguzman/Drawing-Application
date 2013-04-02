@@ -10,8 +10,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JPanel;
-import java.lang.Math;
-import java.util.Collections;
 
 /**
  * The DrawPanel class will contain the implementations of the various commands
@@ -32,7 +30,7 @@ public class DrawPanel extends JPanel {
     private ArrayList<BasicShape> _backup;
 
     public DrawPanel(AppWindow app) {
-        _shapeSet = new ArrayList<BasicShape>();
+        _shapeSet = new ArrayList<>();
         //_window = AppWindow.getInstance();      /** not returning the unique instance **/
         _window = app;
         /**
@@ -72,17 +70,13 @@ public class DrawPanel extends JPanel {
     public void paste() {
     }
 
+    //remove the last drawing done
     public void undoDraw() {
-        if (_shapeSet != null) {
+        if (_shapeSet.size() > 0) {
             int i = _shapeSet.size() - 1;
             _shapeSet.remove(_shapeSet.get(i));
             repaint();
         }
-    }
-    
-    public void redoDraw(ArrayList<BasicShape> bs) {
-        _shapeSet = new ArrayList<>(bs);
-        repaint();
     }
     
     public ArrayList<BasicShape> getCurrentSet() {
@@ -144,7 +138,8 @@ public class DrawPanel extends JPanel {
                         break;
                 }
                 _shapeSet.add(shape);
-                _window._cmds.add(new DrawCommand((DrawPanel)e.getComponent()));
+                _window.addCommand(new DrawCommand((DrawPanel)e.getComponent()));
+                _window.clearBackup();
                 repaint();
             }
         });

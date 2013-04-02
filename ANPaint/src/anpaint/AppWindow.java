@@ -28,8 +28,8 @@ public class AppWindow extends JFrame {
 
     //singleton related methods
     private AppWindow() {
-        _cmds = new Stack<Command>();
-        _cmdsBackup = new Stack<Command>();
+        _cmds = new Stack<>();
+        _cmdsBackup = new Stack<>();
         _instance = this;
         buildFrame();
         buildMenu();
@@ -42,6 +42,15 @@ public class AppWindow extends JFrame {
         if (_instance == null)
             _instance = new AppWindow();
         return _instance;
+    }
+    
+    //clear backup (cannot redo when something new is done)
+    public void clearBackup() {
+        _cmdsBackup.clear();
+    }
+    
+    public void addCommand(Command cmd) {
+        _cmds.add(cmd);
     }
 
     //getters
@@ -156,8 +165,12 @@ public class AppWindow extends JFrame {
         _redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
         
         //undo the last commands
+        //have to use anonymous inner class to access _cmds
         _undo.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e) {
+                //place undos into a command history to be able to
+                //redo the commands within that history
                 if (!_cmds.isEmpty())
                 {
                     _cmdsBackup.add(_cmds.pop());
@@ -168,8 +181,11 @@ public class AppWindow extends JFrame {
         });
         
         //redo the last commands
+        //have to use anonymous inner class to access _cmds
         _redo.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e) {
+                //execute the redo of the latest command stored in the history
                 if (!_cmdsBackup.isEmpty())
                 {
                     _cmds.add(_cmdsBackup.pop());
