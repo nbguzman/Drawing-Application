@@ -1,5 +1,6 @@
 package anpaint.BasicShapes;
 
+import anpaint.DrawMethods.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -21,42 +22,57 @@ public class Rectangle extends BasicShape {
     }
 
     @Override
-    void add(BasicShape shape) {
+    public void add(BasicShape shape) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    void remove(BasicShape shape) {
+    public void remove(BasicShape shape) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    ArrayList<BasicShape> getChildren() {
+    public ArrayList<BasicShape> getChildren() {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
     public void draw(Graphics g) {
-        for (int i = 0; i < _weight; i++) {
-            g.setColor(_colour);
-            g.drawRect(_pointSet[0].x + i, _pointSet[0].y + i, _pointSet[1].x - _pointSet[0].x - (i * 2), _pointSet[1].y - _pointSet[0].y - (i * 2));
+        int width = _pointSet[1].x - _pointSet[0].x;
+        int height = _pointSet[1].y - _pointSet[0].y;
+        DrawTemplate draw;
+
+        if (width >= 0 && height >= 0) {
+            draw = new DrawRectangleBottomRight(this, g);
+        }
+
+        else if (width < 0 && height < 0) {
+            draw = new DrawRectangleTopLeft(this, g);
+        }
+
+        else if (width < 0 && height >= 0) {
+            draw = new DrawRectangleBottomLeft(this, g);
+        }
+
+        else {
+            draw = new DrawRectangleTopRight(this, g);
         }
     }
 
     @Override
-    void moveShape(int dx, int dy) {
+    public void moveShape(int dx, int dy) {
         for (int i = 0; i < _pointSet.length; i++) {
             _pointSet[i].translate(dx, dy);
         }
     }
 
     @Override
-    void resize() {
+    public void resize() {
         //unfinished implementation
     }
 
     @Override
-    void toggleSelected() {
+    public void toggleSelected() {
         _selected = !_selected;
     }
 }

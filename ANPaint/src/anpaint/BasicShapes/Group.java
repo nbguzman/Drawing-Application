@@ -15,17 +15,17 @@ public class Group extends BasicShape{
     }
 
     @Override
-    void add(BasicShape shape) {
+    public void add(BasicShape shape) {
         _graphicSet.add(shape);
     }
 
     @Override
-    void remove(BasicShape shape) {
+    public void remove(BasicShape shape) {
         _graphicSet.remove(shape);
     }
 
     @Override
-    ArrayList<BasicShape> getChildren() {
+    public ArrayList<BasicShape> getChildren() {
         return _graphicSet;
     }
 
@@ -36,19 +36,19 @@ public class Group extends BasicShape{
     }
 
     @Override
-    void moveShape(int dx, int dy) {
+    public void moveShape(int dx, int dy) {
         for (int i = 0; i < _graphicSet.size(); i++)
             _graphicSet.get(i).moveShape(dx, dy);
     }
 
     @Override
-    void resize() {
+    public void resize() {
         for (int i = 0; i < _graphicSet.size(); i++)
             _graphicSet.get(i).resize();
     }
 
     @Override
-    void toggleSelected() {
+    public void toggleSelected() {
         for (int i =0; i < _graphicSet.size(); i++)
             _graphicSet.get(i).toggleSelected();
     }
