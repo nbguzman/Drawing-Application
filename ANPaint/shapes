@@ -1,113 +1,44 @@
-Circles 6
-	color	java.awt.Color[r=0,g=0,b=0]
-	style	true
-	weight	1
-	points 
-		184, 368
-
-	color	java.awt.Color[r=0,g=0,b=0]
-	style	true
-	weight	1
-	points 
-		189, 412
-
-	color	java.awt.Color[r=0,g=0,b=0]
-	style	true
-	weight	1
-	points 
-		544, 519
-
-	color	java.awt.Color[r=0,g=0,b=0]
-	style	true
-	weight	1
-	points 
-		818, 585
-
-	color	java.awt.Color[r=0,g=0,b=0]
-	style	true
-	weight	1
-	points 
-		301, -1
-
-	color	java.awt.Color[r=0,g=0,b=0]
-	style	true
-	weight	1
-	points 
-		34, -16
-
 Lines 2
 	color	java.awt.Color[r=0,g=0,b=0]
 	style	true
 	weight	1
 	points 
-		322, 375
-		505, 247
+		266, 250
+		441, 199
 
 	color	java.awt.Color[r=0,g=0,b=0]
 	style	true
 	weight	1
 	points 
-		648, 503
-		606, 237
+		509, 385
+		769, 258
 
-Triangles 3
+Rectangles 4
 	color	java.awt.Color[r=0,g=0,b=0]
 	style	true
 	weight	1
 	points 
-		604, 161
-		588, 193
-		620, 193
-
-	color	java.awt.Color[r=0,g=0,b=0]
-	style	true
-	weight	1
-	points 
-		861, 198
-		850, 220
-		872, 220
+		221, 205
+		364, 230
 
 	color	java.awt.Color[r=0,g=0,b=0]
 	style	true
 	weight	1
 	points 
-		908, 323
-		891, 357
-		925, 357
-
-Rectangles 5
-	color	java.awt.Color[r=0,g=0,b=0]
-	style	true
-	weight	1
-	points 
-		168, 186
-		332, 189
+		452, 416
+		603, 500
 
 	color	java.awt.Color[r=0,g=0,b=0]
 	style	true
 	weight	1
 	points 
-		811, 130
-		922, 143
+		778, 569
+		889, 536
 
 	color	java.awt.Color[r=0,g=0,b=0]
 	style	true
 	weight	1
 	points 
-		1023, 162
-		1134, 182
-
-	color	java.awt.Color[r=0,g=0,b=0]
-	style	true
-	weight	1
-	points 
-		1117, 251
-		1212, 300
-
-	color	java.awt.Color[r=0,g=0,b=0]
-	style	true
-	weight	1
-	points 
-		1108, 388
-		1156, 421
+		481, 176
+		481, 176
 

@@ -8,7 +8,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,66 +58,78 @@ public class DrawPanel extends JPanel {
         }
     }
 
+    // will have to find a way to parse the file
     public void load() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("shapes"));
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = br.readLine();
+            }
+        } catch (Exception ex) {
+            System.out.println("Loading error, StackTrace:");
+            ex.printStackTrace();
+        }
     }
 
+    // will have to redo the file formatting to make it easier to parse
     public void save() {
         ArrayList<BasicShape> circles = new ArrayList<>();
         ArrayList<BasicShape> lines = new ArrayList<>();
         ArrayList<BasicShape> triangles = new ArrayList<>();
         ArrayList<BasicShape> rectangles = new ArrayList<>();
-        
+
         if (!_shapeSet.isEmpty()) {
             try {
                 FileWriter fstream = new FileWriter("shapes");
                 BufferedWriter out = new BufferedWriter(fstream);
-                
+
                 for (BasicShape bs : _shapeSet) {
                     //System.out.println(bs.toString());
                 }
-                
+
                 // add shapes from _shapeSet to corresponding arraylist shape
                 for (BasicShape bs : _shapeSet) {
-                    if (Circle.class == bs.getClass())
-                    {
+                    if (Circle.class == bs.getClass()) {
                         circles.add(bs);
-                    } 
-                    else if (Line.class == bs.getClass())
-                    {
+                    } else if (Line.class == bs.getClass()) {
                         lines.add(bs);
-                    }
-                    else if (Triangle.class == bs.getClass())
-                    {
+                    } else if (Triangle.class == bs.getClass()) {
                         triangles.add(bs);
-                    }
-                    else if (Rectangle.class == bs.getClass())
-                    {
+                    } else if (Rectangle.class == bs.getClass()) {
                         rectangles.add(bs);
                     }
                 }
-                
-                if (!circles.isEmpty())
-                {
+
+                if (!circles.isEmpty()) {
                     out.write("Circles " + circles.size() + "\n");
                     for (BasicShape bs : circles) {
                         out.append(bs.toString());
                     }
-                    
+                }
+                if (!lines.isEmpty()) {
                     out.write("Lines " + lines.size() + "\n");
                     for (BasicShape bs : lines) {
                         out.append(bs.toString());
                     }
-                    
+                }
+                if (!triangles.isEmpty()) {
                     out.write("Triangles " + triangles.size() + "\n");
                     for (BasicShape bs : triangles) {
                         out.append(bs.toString());
                     }
-                    
+                }
+                if (!rectangles.isEmpty()) {
                     out.write("Rectangles " + rectangles.size() + "\n");
                     for (BasicShape bs : rectangles) {
                         out.append(bs.toString());
                     }
                 }
+
                 out.close();
             } catch (Exception ex) {
                 System.out.println("Saving error, StackTrace:");
