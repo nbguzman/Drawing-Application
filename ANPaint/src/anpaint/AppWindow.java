@@ -43,12 +43,12 @@ public class AppWindow extends JFrame {
             _instance = new AppWindow();
         return _instance;
     }
-    
+
     //clear backup (cannot redo when something new is done)
     public void clearBackup() {
         _cmdsBackup.clear();
     }
-    
+
     public void addCommand(Command cmd) {
         _cmds.add(cmd);
     }
@@ -61,14 +61,14 @@ public class AppWindow extends JFrame {
     public String getColour() {
         return _colourDDL.getSelectedItem().toString();
     }
-    
+
     public boolean getLineType() {
         return _lineStyleDDL.getSelectedItem().toString().equals("Solid") ? true : false;
     }
-    
+
     public int getWeight() {
         int returnValue = 0;
-        
+
         switch (_lineWeightDDL.getSelectedItem().toString()) {
             case "1":
                 returnValue = 1;
@@ -101,7 +101,7 @@ public class AppWindow extends JFrame {
                 returnValue = 10;
                 break;
         }
-        
+
         return returnValue;
     }
 
@@ -145,10 +145,10 @@ public class AppWindow extends JFrame {
         _load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         _exit = new JMenuItem("Exit");
         _exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-        
+
         //pass in the receiver, the command list, and type of command to create
         _exit.addActionListener(new InvokeExit(_drawPanel));
-        
+
         //add menuitems to menu
         _file.add(_save);
         _file.add(_load);
@@ -163,7 +163,7 @@ public class AppWindow extends JFrame {
         _undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
         _redo = new JMenuItem("Redo");
         _redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
-        
+
         //undo the last commands
         //have to use anonymous inner class to access _cmds
         _undo.addActionListener(new ActionListener(){
@@ -179,7 +179,7 @@ public class AppWindow extends JFrame {
                 }
             }
         });
-        
+
         //redo the last commands
         //have to use anonymous inner class to access _cmds
         _redo.addActionListener(new ActionListener(){
@@ -194,7 +194,7 @@ public class AppWindow extends JFrame {
                 }
             }
         });
-        
+
         _edit.add(_copy);
         _edit.add(_paste);
         _edit.add(_undo);

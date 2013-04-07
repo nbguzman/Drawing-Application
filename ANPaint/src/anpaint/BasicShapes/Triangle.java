@@ -1,5 +1,6 @@
 package anpaint.BasicShapes;
 
+import anpaint.DrawMethods.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -7,7 +8,6 @@ import java.util.ArrayList;
 
 //the Triangle class is a leaf that describes an equilateral triangle
 public class Triangle extends BasicShape{
-
 
     public Triangle() {
         this(new Point(),new Point(),new Point(),new Color(0),false,0);
@@ -38,16 +38,7 @@ public class Triangle extends BasicShape{
 
     @Override
     public void draw(Graphics g) {
-        int _xSet[];
-        int _ySet[];
-    
-        for (int i = 0; i < _weight; i++) {
-            _xSet = new int[] { _pointSet[0].x, _pointSet[1].x + i, _pointSet[2].x - i };
-            _ySet = new int[] { _pointSet[0].y + i, _pointSet[1].y - i, _pointSet[2].y - i };
-            
-            g.setColor(_colour);
-            g.drawPolygon(_xSet, _ySet, 3);
-        }
+        DrawTemplate draw = new DrawTriangle(this, g);
     }
 
     @Override

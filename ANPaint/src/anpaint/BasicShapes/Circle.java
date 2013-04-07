@@ -1,5 +1,6 @@
 package anpaint.BasicShapes;
 
+import anpaint.DrawMethods.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 */
 public class Circle extends BasicShape{
 
-    private int _radius;
+    public int _radius;
 
     public Circle() {
         this(new Point(),0,new Color(0),false,0);
@@ -44,10 +45,7 @@ public class Circle extends BasicShape{
 
     @Override
     public void draw(Graphics g) {
-        for (int i = 0; i < _weight; i++) {
-            g.setColor(_colour);
-            g.drawOval(_pointSet[0].x + i, _pointSet[0].y + i, (_radius - i) * 2, (_radius - i) * 2);
-        }
+        DrawTemplate draw = new DrawCircle(this, g);
     }
 
     @Override

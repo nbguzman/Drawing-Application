@@ -1,5 +1,6 @@
 package anpaint.BasicShapes;
 
+import anpaint.DrawMethods.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -37,9 +38,24 @@ public class Rectangle extends BasicShape {
 
     @Override
     public void draw(Graphics g) {
-        for (int i = 0; i < _weight; i++) {
-            g.setColor(_colour);
-            g.drawRect(_pointSet[0].x + i, _pointSet[0].y + i, _pointSet[1].x - _pointSet[0].x - (i * 2), _pointSet[1].y - _pointSet[0].y - (i * 2));
+        int width = _pointSet[1].x - _pointSet[0].x;
+        int height = _pointSet[1].y - _pointSet[0].y;
+        DrawTemplate draw;
+
+        if (width >= 0 && height >= 0) {
+            draw = new DrawRectangleBottomRight(this, g);
+        }
+
+        else if (width < 0 && height < 0) {
+            draw = new DrawRectangleTopLeft(this, g);
+        }
+
+        else if (width < 0 && height >= 0) {
+            draw = new DrawRectangleBottomLeft(this, g);
+        }
+
+        else {
+            draw = new DrawRectangleTopRight(this, g);
         }
     }
 
