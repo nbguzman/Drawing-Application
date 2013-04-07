@@ -146,9 +146,8 @@ public class AppWindow extends JFrame {
         _exit = new JMenuItem("Exit");
         _exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
         
-        //pass in the receiver, the command list, and type of command to create
         _save.addActionListener(new InvokeSave(_drawPanel));
-        //pass in the receiver, the command list, and type of command to create
+        _load.addActionListener(new InvokeLoad(_drawPanel));
         _exit.addActionListener(new InvokeExit(_drawPanel));
         
         //add menuitems to menu
