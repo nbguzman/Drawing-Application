@@ -1,5 +1,6 @@
 package anpaint.BasicShapes;
 
+import anpaint.DrawMethods.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -21,17 +22,17 @@ public class Line extends BasicShape {
     }
 
     @Override
-    void add(BasicShape shape) {
+    public void add(BasicShape shape) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    void remove(BasicShape shape) {
+    public void remove(BasicShape shape) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
     @Override
-    ArrayList<BasicShape> getChildren() {
+    public ArrayList<BasicShape> getChildren() {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
@@ -45,6 +46,7 @@ public class Line extends BasicShape {
          */
         int adjacent = _pointSet[1].x - _pointSet[0].x;
         int opposite = _pointSet[1].y - _pointSet[0].y;
+        DrawTemplate draw;
 
         if (adjacent < 0)
             adjacent *= -1;
@@ -56,53 +58,29 @@ public class Line extends BasicShape {
         if (adjacent != 0)
             theta = Math.toDegrees(Math.atan(opposite / adjacent));
 
-        if (theta != 0) {
-            if (theta > 45) {
-                for (int i = 0; i < _weight; i++) {
-                    g.setColor(_colour);
-                    g.drawLine(_pointSet[0].x + i, _pointSet[0].y, _pointSet[1].x + i, _pointSet[1].y);
-                }
-            }
-
-            else {
-                for (int i = 0; i < _weight; i++) {
-                    g.setColor(_colour);
-                    g.drawLine(_pointSet[0].x, _pointSet[0].y + i, _pointSet[1].x, _pointSet[1].y + i);
-                }
-            }
+        if (theta > 45 || adjacent == 0) {
+            draw = new DrawLineX(this, g);
         }
 
         else {
-            if (adjacent == 0) {
-                for (int i = 0; i < _weight; i++) {
-                    g.setColor(_colour);
-                    g.drawLine(_pointSet[0].x + i, _pointSet[0].y, _pointSet[1].x + i, _pointSet[1].y);
-                }
-            }
-
-            else {
-                for (int i = 0; i < _weight; i++) {
-                    g.setColor(_colour);
-                    g.drawLine(_pointSet[0].x, _pointSet[0].y + i, _pointSet[1].x, _pointSet[1].y + i);
-                }
-            }
+            draw = new DrawLineY(this, g);
         }
     }
 
     @Override
-    void moveShape(int dx, int dy) {
+    public void moveShape(int dx, int dy) {
         for (int i = 0; i < _pointSet.length; i++) {
             _pointSet[i].translate(dx, dy);
         }
     }
 
     @Override
-    void resize() {
+    public void resize() {
         //unfinished implementation
     }
 
     @Override
-    void toggleSelected() {
+    public void toggleSelected() {
         _selected = !_selected;
     }
 }

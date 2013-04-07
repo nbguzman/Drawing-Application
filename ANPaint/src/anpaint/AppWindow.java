@@ -25,12 +25,14 @@ public class AppWindow extends JFrame {
     //a "history" of commands
     public Stack<Command> _cmds;
     public Stack<Command> _cmdsBackup;
+    public boolean _draw;
 
     //singleton related methods
     private AppWindow() {
         _cmds = new Stack<>();
         _cmdsBackup = new Stack<>();
         _instance = this;
+        _draw = true;
         buildFrame();
         buildMenu();
         buildToolbar();
@@ -43,12 +45,12 @@ public class AppWindow extends JFrame {
             _instance = new AppWindow();
         return _instance;
     }
-    
+
     //clear backup (cannot redo when something new is done)
     public void clearBackup() {
         _cmdsBackup.clear();
     }
-    
+
     public void addCommand(Command cmd) {
         _cmds.add(cmd);
     }
@@ -61,14 +63,14 @@ public class AppWindow extends JFrame {
     public String getColour() {
         return _colourDDL.getSelectedItem().toString();
     }
-    
+
     public boolean getLineType() {
         return _lineStyleDDL.getSelectedItem().toString().equals("Solid") ? true : false;
     }
-    
+
     public int getWeight() {
         int returnValue = 0;
-        
+
         switch (_lineWeightDDL.getSelectedItem().toString()) {
             case "1":
                 returnValue = 1;
@@ -101,7 +103,7 @@ public class AppWindow extends JFrame {
                 returnValue = 10;
                 break;
         }
-        
+
         return returnValue;
     }
 
@@ -145,11 +147,10 @@ public class AppWindow extends JFrame {
         _load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         _exit = new JMenuItem("Exit");
         _exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-        
         _save.addActionListener(new InvokeSave(_drawPanel));
         _load.addActionListener(new InvokeLoad(_drawPanel));
         _exit.addActionListener(new InvokeExit(_drawPanel));
-        
+
         //add menuitems to menu
         _file.add(_save);
         _file.add(_load);
@@ -164,7 +165,7 @@ public class AppWindow extends JFrame {
         _undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
         _redo = new JMenuItem("Redo");
         _redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
-        
+
         //undo the last commands
         //have to use anonymous inner class to access _cmds
         _undo.addActionListener(new ActionListener(){
@@ -180,7 +181,7 @@ public class AppWindow extends JFrame {
                 }
             }
         });
-        
+
         //redo the last commands
         //have to use anonymous inner class to access _cmds
         _redo.addActionListener(new ActionListener(){
@@ -195,7 +196,7 @@ public class AppWindow extends JFrame {
                 }
             }
         });
-        
+
         _edit.add(_copy);
         _edit.add(_paste);
         _edit.add(_undo);
@@ -223,6 +224,15 @@ public class AppWindow extends JFrame {
         //selection Tool
         _selectionTool = new JButton("Selection Tool");
         _selectionTool.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        //adding the action listener to know the selection tool is active
+        _selectionTool.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                _draw = false;
+            }
+        });
+
         _toolBar.add(_selectionTool);
         _toolBar.add(Box.createRigidArea(new Dimension(0,35)));
 
@@ -259,6 +269,15 @@ public class AppWindow extends JFrame {
 
         _shapeTool = new JButton("Shape Tool");
         _shapeTool.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        //adding the action listener to know the shape tool is active
+        _shapeTool.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                _draw = true;
+            }
+        });
+
         _toolBar.add(_shapeTool);
         _toolBar.add(Box.createRigidArea(new Dimension(0,35)));
 
