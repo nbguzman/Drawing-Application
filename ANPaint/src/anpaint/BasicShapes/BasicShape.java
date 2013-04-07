@@ -20,4 +20,19 @@ public abstract class BasicShape extends Object {
     public abstract void draw(Graphics g);
     abstract void resize();
     abstract void toggleSelected();
+    public String toString() {
+        String rc = "";
+        
+        rc += "\tcolor\t" + _colour.toString() + "\n" 
+           + "\tstyle\t" + _style + "\n"
+           + "\tweight\t" + _weight + "\n"
+           + "\tpoints " + "\n";
+        
+        for (Point p: _pointSet) {
+            rc += "\t\t" + p.x + ", " + p.y + "\n";
+        }
+        rc += "\n";
+        
+        return rc;
+    }
 }

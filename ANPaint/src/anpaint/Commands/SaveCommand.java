@@ -1,5 +1,7 @@
 package anpaint.Commands;
 
+import anpaint.DrawPanel;
+
 /**
  * The SaveCommand class will handle the saving of files. Will implement a way 
  * to save coordinates for each shape and put them into some sort of file. 
@@ -12,17 +14,19 @@ package anpaint.Commands;
  * This is part of the Command Pattern
  */
 public class SaveCommand implements Command {
-    public SaveCommand() {
-        
+    DrawPanel __drawPanel;
+    
+    public SaveCommand(DrawPanel dp) {
+        __drawPanel = dp;
     }
     
     public void execute() {
-        
+        __drawPanel.save();
     }
     
     // Might be implemented - could make temp files while running
     public void undo() {
-        
+        throw new UnsupportedOperationException("Cannot redo a save command");
     }
     
     // Will not be implemented - cannot redo a save

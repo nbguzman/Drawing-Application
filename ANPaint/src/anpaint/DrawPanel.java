@@ -8,6 +8,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
@@ -57,6 +60,68 @@ public class DrawPanel extends JPanel {
     }
 
     public void save() {
+        ArrayList<BasicShape> circles = new ArrayList<>();
+        ArrayList<BasicShape> lines = new ArrayList<>();
+        ArrayList<BasicShape> triangles = new ArrayList<>();
+        ArrayList<BasicShape> rectangles = new ArrayList<>();
+        
+        if (!_shapeSet.isEmpty()) {
+            try {
+                FileWriter fstream = new FileWriter("shapes");
+                BufferedWriter out = new BufferedWriter(fstream);
+                
+                for (BasicShape bs : _shapeSet) {
+                    //System.out.println(bs.toString());
+                }
+                
+                // add shapes from _shapeSet to corresponding arraylist shape
+                for (BasicShape bs : _shapeSet) {
+                    if (Circle.class == bs.getClass())
+                    {
+                        circles.add(bs);
+                    } 
+                    else if (Line.class == bs.getClass())
+                    {
+                        lines.add(bs);
+                    }
+                    else if (Triangle.class == bs.getClass())
+                    {
+                        triangles.add(bs);
+                    }
+                    else if (Rectangle.class == bs.getClass())
+                    {
+                        rectangles.add(bs);
+                    }
+                }
+                
+                if (!circles.isEmpty())
+                {
+                    out.write("Circles " + circles.size() + "\n");
+                    for (BasicShape bs : circles) {
+                        out.append(bs.toString());
+                    }
+                    
+                    out.write("Lines " + lines.size() + "\n");
+                    for (BasicShape bs : lines) {
+                        out.append(bs.toString());
+                    }
+                    
+                    out.write("Triangles " + triangles.size() + "\n");
+                    for (BasicShape bs : triangles) {
+                        out.append(bs.toString());
+                    }
+                    
+                    out.write("Rectangles " + rectangles.size() + "\n");
+                    for (BasicShape bs : rectangles) {
+                        out.append(bs.toString());
+                    }
+                }
+                out.close();
+            } catch (Exception ex) {
+                System.out.println("Saving error, StackTrace:");
+                ex.printStackTrace();
+            }
+        }
     }
 
     public void exit() {
@@ -78,25 +143,25 @@ public class DrawPanel extends JPanel {
             repaint();
         }
     }
-    
+
     public ArrayList<BasicShape> getCurrentSet() {
         return _shapeSet;
     }
-    
+
     public void setCurrentSet(ArrayList<BasicShape> source) {
         _shapeSet = new ArrayList<>(source);
         repaint();
     }
-    
+
     public ArrayList<BasicShape> getBackupSet() {
         return _backup;
     }
-    
+
     public void setBackupSet(ArrayList<BasicShape> source) {
         _backup = new ArrayList<>(source);
         repaint();
     }
-    
+
     public void refreshCanvas() {
         repaint();
     }
@@ -138,7 +203,7 @@ public class DrawPanel extends JPanel {
                         break;
                 }
                 _shapeSet.add(shape);
-                _window.addCommand(new DrawCommand((DrawPanel)e.getComponent()));
+                _window.addCommand(new DrawCommand((DrawPanel) e.getComponent()));
                 _window.clearBackup();
                 repaint();
             }
