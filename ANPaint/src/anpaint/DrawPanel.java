@@ -78,26 +78,22 @@ public class DrawPanel extends JPanel {
             repaint();
         }
     }
-    
+
     public ArrayList<BasicShape> getCurrentSet() {
         return _shapeSet;
     }
-    
+
     public void setCurrentSet(ArrayList<BasicShape> source) {
         _shapeSet = new ArrayList<>(source);
         repaint();
     }
-    
+
     public ArrayList<BasicShape> getBackupSet() {
         return _backup;
     }
-    
+
     public void setBackupSet(ArrayList<BasicShape> source) {
         _backup = new ArrayList<>(source);
-        repaint();
-    }
-    
-    public void refreshCanvas() {
         repaint();
     }
 
@@ -120,26 +116,65 @@ public class DrawPanel extends JPanel {
                 BasicShape shape;
                 DrawCommand dc;
 
-                switch (_window.getShapeType()) {
-                    case "Rectangle":
-                        shape = _rectangleFactory.createShape(_point, e, _window);
-                        break;
-                    case "Triangle":
-                        shape = _triangleFactory.createShape(_point, e, _window);
-                        break;
-                    case "Circle":
-                        shape = _circleFactory.createShape(_point, e, _window);
-                        break;
-                    case "Line":
-                        shape = _lineFactory.createShape(_point, e, _window);
-                        break;
-                    default:
-                        shape = _lineFactory.createShape(_point, e, _window);
-                        break;
+                if (_window._draw) {
+                    switch (_window.getShapeType()) {
+                        case "Rectangle":
+                            shape = _rectangleFactory.createShape(_point, e, _window);
+                            break;
+                        case "Triangle":
+                            shape = _triangleFactory.createShape(_point, e, _window);
+                            break;
+                        case "Circle":
+                            shape = _circleFactory.createShape(_point, e, _window);
+                            break;
+                        case "Line":
+                            shape = _lineFactory.createShape(_point, e, _window);
+                            break;
+                        default:
+                            shape = _lineFactory.createShape(_point, e, _window);
+                            break;
+                    }
+                    _shapeSet.add(shape);
+                    _window.addCommand(new DrawCommand((DrawPanel)e.getComponent()));
+                    _window.clearBackup();
                 }
-                _shapeSet.add(shape);
-                _window.addCommand(new DrawCommand((DrawPanel)e.getComponent()));
-                _window.clearBackup();
+
+                else {
+                    int smallX, bigX, smallY, bigY;
+
+                    if (e.getX() < _point.x) {
+                        bigX = _point.x;
+                        smallX = e.getX();
+                    }
+
+                    else {
+                        bigX = e.getX();
+                        smallX = _point.x;
+                    }
+
+                    if (e.getY() < _point.y) {
+                        bigY = _point.y;
+                        smallY = e.getY();
+                    }
+
+                    else {
+                        bigY = e.getY();
+                        smallY = _point.y;
+                    }
+
+                    for (int i = 0; i < _shapeSet.size(); i++) {
+                        Point pointSet[] = _shapeSet.get(i)._pointSet;
+
+                        for (int j = 0; j < pointSet.length; j++) {
+                            if (pointSet[j].x < bigX && pointSet[j].x > smallX && pointSet[j].y < bigY && pointSet[j].y > smallY) {
+                                _shapeSet.get(i).toggleSelected();
+                                System.out.println("Shape " + i + " Selected: " + _shapeSet.get(i)._selected);
+                                j = pointSet.length;
+                            }
+                        }
+                    }
+                }
+
                 repaint();
             }
         });

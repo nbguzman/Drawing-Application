@@ -11,12 +11,12 @@ public abstract class BasicShape extends Object {
     public boolean _selected;
 
     //the method definitions that must be implemented in the sub classes
-    abstract void add(BasicShape shape);
-    abstract void remove(BasicShape shape);
-    abstract ArrayList<BasicShape> getChildren();
+    public abstract void add(BasicShape shape);
+    public abstract void remove(BasicShape shape);
+    public abstract ArrayList<BasicShape> getChildren();
     //abstract void paint(Graphics g);
-    abstract void moveShape(int dx, int dy);
+    public abstract void moveShape(int dx, int dy);
     public abstract void draw(Graphics g);
-    abstract void resize();
-    abstract void toggleSelected();
+    public abstract void resize();
+    public abstract void toggleSelected();
 }
