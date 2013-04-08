@@ -12,8 +12,8 @@ public class DrawTriangle extends DrawTemplate {
 
     @Override
     void draw(int i, BasicShape shape, Graphics g) {
-        int _xSet[] = new int[] { shape._pointSet[0].x, shape._pointSet[1].x + i, shape._pointSet[2].x - i };
-        int _ySet[] = new int[] { shape._pointSet[0].y + i, shape._pointSet[1].y - i, shape._pointSet[2].y - i };
+        int _xSet[] = new int[] { shape._pointSet.get(0).x, shape._pointSet.get(1).x + i, shape._pointSet.get(2).x - i };
+        int _ySet[] = new int[] { shape._pointSet.get(0).y + i, shape._pointSet.get(1).y - i, shape._pointSet.get(2).y - i };
 
         g.drawPolygon(_xSet, _ySet, 3);
     }

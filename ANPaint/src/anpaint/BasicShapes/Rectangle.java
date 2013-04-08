@@ -14,7 +14,9 @@ public class Rectangle extends BasicShape {
     }
 
     public Rectangle(Point p1, Point p2, Color colour, boolean style, int weight) {
-        _pointSet = new Point[] {p1, p2};
+        _pointSet = new ArrayList<>();
+        _pointSet.add(p1);
+        _pointSet.add(p2);
         _colour = colour;
         _style = style;
         _weight = weight;
@@ -38,8 +40,8 @@ public class Rectangle extends BasicShape {
 
     @Override
     public void draw(Graphics g) {
-        int width = _pointSet[1].x - _pointSet[0].x;
-        int height = _pointSet[1].y - _pointSet[0].y;
+        int width = _pointSet.get(1).x - _pointSet.get(0).x;
+        int height = _pointSet.get(1).y - _pointSet.get(0).y;
         DrawTemplate draw;
 
         if (width >= 0 && height >= 0) {
@@ -61,8 +63,8 @@ public class Rectangle extends BasicShape {
 
     @Override
     public void moveShape(int dx, int dy) {
-        for (int i = 0; i < _pointSet.length; i++) {
-            _pointSet[i].translate(dx, dy);
+        for (int i = 0; i < _pointSet.size(); i++) {
+            _pointSet.get(i).translate(dx, dy);
         }
     }
 
