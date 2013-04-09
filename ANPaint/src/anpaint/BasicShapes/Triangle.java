@@ -14,7 +14,10 @@ public class Triangle extends BasicShape{
     }
 
     public Triangle(Point p1, Point p2, Point p3, Color colour, boolean style, int weight) {
-        _pointSet = new Point[] { p1, p2, p3 };
+        _pointSet = new ArrayList<>();
+        _pointSet.add(p1);
+        _pointSet.add(p2);
+        _pointSet.add(p3);
         _colour = colour;
         _style = style;
         _weight = weight;
@@ -43,8 +46,8 @@ public class Triangle extends BasicShape{
 
     @Override
     public void moveShape(int dx, int dy) {
-        for (int i = 0; i < _pointSet.length; i++) {
-            _pointSet[i].translate(dx, dy);
+        for (int i = 0; i < _pointSet.size(); i++) {
+            _pointSet.get(i).translate(dx, dy);
         }
     }
 

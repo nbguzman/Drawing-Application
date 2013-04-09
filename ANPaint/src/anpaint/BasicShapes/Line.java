@@ -14,7 +14,9 @@ public class Line extends BasicShape {
     }
 
     public Line(Point p1, Point p2, Color colour, boolean style, int weight) {
-        _pointSet = new Point[] {p1, p2};
+        _pointSet = new ArrayList<>();
+        _pointSet.add(p1);
+        _pointSet.add(p2);
         _colour = colour;
         _style = style;
         _weight = weight;
@@ -44,8 +46,8 @@ public class Line extends BasicShape {
          * The calculations determine the angle the the line makes with a hypothetical triangle,
          * and depending on that angle it will either draw the additional thickness lines either vertically or horizontally
          */
-        int adjacent = _pointSet[1].x - _pointSet[0].x;
-        int opposite = _pointSet[1].y - _pointSet[0].y;
+        int adjacent = _pointSet.get(1).x - _pointSet.get(0).x;
+        int opposite = _pointSet.get(1).y - _pointSet.get(0).y;
         DrawTemplate draw;
 
         if (adjacent < 0)
@@ -69,8 +71,8 @@ public class Line extends BasicShape {
 
     @Override
     public void moveShape(int dx, int dy) {
-        for (int i = 0; i < _pointSet.length; i++) {
-            _pointSet[i].translate(dx, dy);
+        for (int i = 0; i < _pointSet.size(); i++) {
+            _pointSet.get(i).translate(dx, dy);
         }
     }
 

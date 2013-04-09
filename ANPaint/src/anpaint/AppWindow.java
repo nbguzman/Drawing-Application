@@ -1,5 +1,6 @@
 package anpaint;
 
+import anpaint.BasicShapes.Group;
 import anpaint.Commands.Command;
 import anpaint.Commands.Invokers.*;
 import java.awt.*;
@@ -13,11 +14,11 @@ public class AppWindow extends JFrame {
     //single instance, used globally
     private static AppWindow _instance;
     //data used within the class
-    DrawPanel _drawPanel;
-    JComboBox _shapesDDL;
-    JComboBox _colourDDL;
-    JComboBox _lineWeightDDL;
-    JComboBox _lineStyleDDL;
+    private DrawPanel _drawPanel;
+    private JComboBox _shapesDDL;
+    private JComboBox _colourDDL;
+    private JComboBox _lineWeightDDL;
+    private JComboBox _lineStyleDDL;
     private String[] _shapes = { "Line", "Rectangle", "Circle", "Triangle" };
     private String[] _colours = { "Black", "Red", "Green", "Blue" };
     private String[] _weight = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
@@ -116,6 +117,7 @@ public class AppWindow extends JFrame {
 
         //instantiate a panel to draw shapes on
         _drawPanel = new DrawPanel(_instance);
+        _drawPanel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 
         //set all the frame properties
         this.setTitle("AN Paint");
@@ -230,6 +232,7 @@ public class AppWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 _draw = false;
+                _drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
         });
 
@@ -275,6 +278,7 @@ public class AppWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 _draw = true;
+                _drawPanel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
             }
         });
 
@@ -289,10 +293,26 @@ public class AppWindow extends JFrame {
 
         _group = new JButton("Group");
         _group.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        _group.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                _drawPanel.groupShapes();
+            }
+        });
+
         _toolBar.add(_group);
 
         _ungroup = new JButton("Ungroup");
         _ungroup.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        _ungroup.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                _drawPanel.unGroupShapes();
+            }
+        });
+
         _toolBar.add(_ungroup);
 
         //add the toolbar to the panel within the frame

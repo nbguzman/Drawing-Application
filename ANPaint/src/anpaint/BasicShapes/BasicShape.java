@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public abstract class BasicShape extends Object {
     public Color _colour;
-    public Point[] _pointSet;
+    public ArrayList<Point> _pointSet;
     public boolean _style; //true solid, false dotted
     public int _weight;
     public boolean _selected;
