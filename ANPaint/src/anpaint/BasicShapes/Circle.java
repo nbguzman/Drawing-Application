@@ -20,7 +20,8 @@ public class Circle extends BasicShape{
     }
 
     public Circle(Point p1, int radius, Color colour, boolean style, int weight) {
-        _pointSet = new Point[] {p1};
+        _pointSet = new ArrayList<>();
+        _pointSet.add(p1);
         _radius = radius;
         _colour = colour;
         _style = style;
@@ -50,7 +51,7 @@ public class Circle extends BasicShape{
 
     @Override
     public void moveShape(int dx, int dy) {
-        _pointSet[0].translate(dx, dy);
+        _pointSet.get(0).translate(dx, dy);
     }
 
     @Override

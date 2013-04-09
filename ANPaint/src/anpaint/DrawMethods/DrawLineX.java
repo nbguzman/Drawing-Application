@@ -11,6 +11,6 @@ public class DrawLineX extends DrawTemplate{
 
     @Override
     void draw(int i, BasicShape shape, Graphics g) {
-        g.drawLine(shape._pointSet[0].x + i,shape. _pointSet[0].y, shape._pointSet[1].x + i, shape._pointSet[1].y);
+        g.drawLine(shape._pointSet.get(0).x + i,shape. _pointSet.get(0).y, shape._pointSet.get(1).x + i, shape._pointSet.get(1).y);
     }
 }

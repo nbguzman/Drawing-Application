@@ -1,8 +1,6 @@
 package anpaint.BasicShapes;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.util.ArrayList;
 
 //the Group class a composite object which contains all leafs that are grouped together
@@ -11,12 +9,16 @@ public class Group extends BasicShape{
     private ArrayList<BasicShape> _graphicSet;
 
     public Group() {
-        _graphicSet = new ArrayList<BasicShape>();
+        _graphicSet = new ArrayList<>();
+        _pointSet = new ArrayList<>();
     }
 
     @Override
     public void add(BasicShape shape) {
         _graphicSet.add(shape);
+
+        for (int i = 0; i < shape._pointSet.size(); i++)
+            _pointSet.add(shape._pointSet.get(i));
     }
 
     @Override
@@ -49,6 +51,8 @@ public class Group extends BasicShape{
 
     @Override
     public void toggleSelected() {
+        _selected = ! _selected;
+
         for (int i =0; i < _graphicSet.size(); i++)
             _graphicSet.get(i).toggleSelected();
     }

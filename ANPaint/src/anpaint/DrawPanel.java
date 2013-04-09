@@ -195,67 +195,113 @@ public class DrawPanel extends JPanel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                BasicShape shape;
-                DrawCommand dc;
-
                 if (_window._draw) {
-                    switch (_window.getShapeType()) {
-                        case "Rectangle":
-                            shape = _rectangleFactory.createShape(_point, e, _window);
-                            break;
-                        case "Triangle":
-                            shape = _triangleFactory.createShape(_point, e, _window);
-                            break;
-                        case "Circle":
-                            shape = _circleFactory.createShape(_point, e, _window);
-                            break;
-                        case "Line":
-                            shape = _lineFactory.createShape(_point, e, _window);
-                            break;
-                        default:
-                            shape = _lineFactory.createShape(_point, e, _window);
-                            break;
-                    }
-                    _shapeSet.add(shape);
-                    _window.addCommand(new DrawCommand((DrawPanel)e.getComponent()));
-                    _window.clearBackup();
-                } else {
-                    int smallX, bigX, smallY, bigY;
+                    drawShape(e);
+                }
 
-                    if (e.getX() < _point.x) {
-                        bigX = _point.x;
-                        smallX = e.getX();
-                    }
-
-                    else {
-                        bigX = e.getX();
-                        smallX = _point.x;
-                    }
-
-                    if (e.getY() < _point.y) {
-                        bigY = _point.y;
-                        smallY = e.getY();
-                    }
-
-                    else {
-                        bigY = e.getY();
-                        smallY = _point.y;
-                    }
-
-                    for (int i = 0; i < _shapeSet.size(); i++) {
-                        Point pointSet[] = _shapeSet.get(i)._pointSet;
-
-                        for (int j = 0; j < pointSet.length; j++) {
-                            if (pointSet[j].x < bigX && pointSet[j].x > smallX && pointSet[j].y < bigY && pointSet[j].y > smallY) {
-                                _shapeSet.get(i).toggleSelected();
-                                System.out.println("Shape " + i + " Selected: " + _shapeSet.get(i)._selected);
-                                j = pointSet.length;
-                            }
-                        }
-                    }
+                else {
+                    selectShapes(e);
                 }
                 repaint();
             }
         });
+    }
+
+    private void drawShape(MouseEvent e) {
+        BasicShape shape;
+
+        switch (_window.getShapeType()) {
+            case "Rectangle":
+                shape = _rectangleFactory.createShape(_point, e, _window);
+                break;
+            case "Triangle":
+                shape = _triangleFactory.createShape(_point, e, _window);
+                break;
+            case "Circle":
+                shape = _circleFactory.createShape(_point, e, _window);
+                break;
+            case "Line":
+                shape = _lineFactory.createShape(_point, e, _window);
+                break;
+            default:
+                shape = _lineFactory.createShape(_point, e, _window);
+                break;
+        }
+        _shapeSet.add(shape);
+        _window.addCommand(new DrawCommand((DrawPanel)e.getComponent()));
+        _window.clearBackup();
+    }
+
+    private void selectShapes(MouseEvent e) {
+        int smallX, bigX, smallY, bigY;
+
+        if (e.getX() < _point.x) {
+            bigX = _point.x;
+            smallX = e.getX();
+        }
+
+        else {
+            bigX = e.getX();
+            smallX = _point.x;
+        }
+
+        if (e.getY() < _point.y) {
+            bigY = _point.y;
+            smallY = e.getY();
+        }
+
+        else {
+            bigY = e.getY();
+            smallY = _point.y;
+        }
+
+        for (int i = 0; i < _shapeSet.size(); i++) {
+            ArrayList<Point> pointSet = _shapeSet.get(i)._pointSet;
+
+            if (_shapeSet.get(i)._selected)
+                _shapeSet.get(i).toggleSelected();
+
+            for (int j = 0; j < pointSet.size(); j++) {
+                int x = pointSet.get(j).x;
+                int y = pointSet.get(j).y;
+
+                if (x < bigX && x > smallX && y < bigY && y > smallY) {
+                    _shapeSet.get(i).toggleSelected();
+                    System.out.println("Shape " + i + " Selected: " + _shapeSet.get(i)._selected);
+                    j = pointSet.size();
+                }
+            }
+        }
+    }
+
+    public void groupShapes() {
+        Group group = new Group();
+        int n = _shapeSet.size();
+        int removed = 0;
+
+        for (int i = 0; i < n ; i++) {
+            if (_shapeSet.get(i - removed)._selected) {
+                _shapeSet.get(i - removed).toggleSelected();
+                group.add(_shapeSet.get(i - removed));
+                _shapeSet.remove(i - removed);
+                removed++;
+            }
+        }
+
+        _shapeSet.add(group);
+    }
+
+    public void unGroupShapes() {
+        int n = _shapeSet.size();
+
+        for (int i = 0; i < n; i++) {
+            if (_shapeSet.get(i)._selected && _shapeSet.get(i) instanceof Group) {
+                ArrayList<BasicShape> adding = _shapeSet.get(i).getChildren();
+                _shapeSet.remove(i);
+
+                for (int j = 0; j < adding.size(); j++)
+                    _shapeSet.add(adding.get(j));
+            }
+        }
     }
 }
