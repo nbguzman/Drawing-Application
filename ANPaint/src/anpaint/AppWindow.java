@@ -1,6 +1,5 @@
 package anpaint;
 
-import anpaint.BasicShapes.Group;
 import anpaint.Commands.Command;
 import anpaint.Commands.Invokers.*;
 import java.awt.*;
