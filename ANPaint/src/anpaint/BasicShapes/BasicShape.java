@@ -1,9 +1,10 @@
 package anpaint.BasicShapes;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class BasicShape extends Object{
+public abstract class BasicShape extends Object implements Serializable{
     public Color _colour;
     public ArrayList<Point> _pointSet;
     public boolean _style; //true solid, false dotted

@@ -4,10 +4,11 @@ import anpaint.DrawMethods.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 //the Triangle class is a leaf that describes an equilateral triangle
-public class Triangle extends BasicShape{
+public class Triangle extends BasicShape implements Serializable{
 
     public Triangle() {
         this(new Point(),new Point(),new Point(),new Color(0),false,0);
@@ -59,5 +60,9 @@ public class Triangle extends BasicShape{
     @Override
     public void toggleSelected() {
         _selected = !_selected;
+    }
+    
+    public String toString() {
+        return "Triangle";
     }
 }

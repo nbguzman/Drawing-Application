@@ -65,65 +65,12 @@ public class DrawPanel extends JPanel {
     // will have to find a way to parse the file
     public void load() {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("shapes"));
-            StringBuilder sb = new StringBuilder();
-            String line;
-
-            _shapeSet = new ArrayList<>();
-
-            String shape;
-            String[] nodes;
-            String[] color;
-            String[] style;
-            String[] weight;
-            String[] points;
-            String[] temp;
-
-            String[] pA;
-            String[] pB;
-            String[] pC;
-            String[] pD;
-            String[] pointsTemp;
-
-            while ((line = br.readLine()) != null) {
-                nodes = line.split("~");
-                shape = nodes[0];
-                // shift to the left 1 so that its done
-
-                System.arraycopy(nodes, 1, nodes, 0, nodes.length - 1);
-                for (String s : nodes) {
-
-                    System.out.println(s);
-                    temp = s.split(";");
-                    color = temp[0].split(":"); // color:java.awt.Color[r=0,g=0,b=0]
-                    style = temp[1].split(":"); // style:true
-                    weight = temp[2].split(":"); // weight:1
-                    points = temp[3].split(":"); // points:214-184,493-217
-                    pointsTemp = points[1].split(","); // 214-184
-                    
-                    //public Circle(Point p1, int radius, Color colour, boolean style, int weight) 
-
-                    switch (shape.charAt(0)) {
-                        case '0': // circle
-                            //System.out.println("0");
-                            _shapeSet.add(new Circle());
-                            break;
-                        case '1': // line
-                            //System.out.println("1");
-                            break;
-                        case '2': // triangle
-                            //System.out.println("2");
-                            break;
-                        case '3': // rectangle
-                            //System.out.println("3");
-                            break;
-                    }
-                    System.out.println("\n");
-                    System.arraycopy(nodes, 1, nodes, 0, nodes.length - 1);
-                }
-            }
-
-            repaint();
+            FileInputStream fileIn = new FileInputStream("shapes");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            _shapeSet = (ArrayList<BasicShape>) in.readObject();
+            in.close();
+            fileIn.close();
+            refreshCanvas();
         } catch (Exception ex) {
             System.out.println("Loading error, StackTrace:");
             ex.printStackTrace();
@@ -139,51 +86,11 @@ public class DrawPanel extends JPanel {
 
         if (!_shapeSet.isEmpty()) {
             try {
-                FileWriter fstream = new FileWriter("shapes");
-                BufferedWriter out = new BufferedWriter(fstream);
-
-                // add shapes from _shapeSet to corresponding arraylist shape
-                for (BasicShape bs : _shapeSet) {
-                    if (Circle.class == bs.getClass()) {
-                        circles.add(bs);
-                    } else if (Line.class == bs.getClass()) {
-                        lines.add(bs);
-                    } else if (Triangle.class == bs.getClass()) {
-                        triangles.add(bs);
-                    } else if (Rectangle.class == bs.getClass()) {
-                        rectangles.add(bs);
-                    }
-                }
-
-                if (!circles.isEmpty()) {
-                    out.write("0~");
-                    for (BasicShape bs : circles) {
-                        out.append(bs.toString());
-                    }
-                    out.append("\n");
-                }
-                if (!lines.isEmpty()) {
-                    out.write("1~");
-                    for (BasicShape bs : lines) {
-                        out.append(bs.toString());
-                    }
-                    out.append("\n");
-                }
-                if (!triangles.isEmpty()) {
-                    out.write("2~");
-                    for (BasicShape bs : triangles) {
-                        out.append(bs.toString());
-                    }
-                    out.append("\n");
-                }
-                if (!rectangles.isEmpty()) {
-                    out.write("3~");
-                    for (BasicShape bs : rectangles) {
-                        out.append(bs.toString());
-                    }
-                    out.append("\n");
-                }
+                FileOutputStream fileOut = new FileOutputStream("shapes");
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                out.writeObject(_shapeSet);
                 out.close();
+                fileOut.close();
             } catch (Exception ex) {
                 System.out.println("Saving error, StackTrace:");
                 ex.printStackTrace();
