@@ -7,7 +7,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 //the Line class is a leaf that describes a straight line
-public class Line extends BasicShape {
+public class Line extends BasicShape{
 
     public Line() {
         this(new Point(),new Point(),new Color(0),false,0);
