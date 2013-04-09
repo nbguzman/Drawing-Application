@@ -1,5 +1,6 @@
 package anpaint;
 
+import anpaint.BasicShapes.Group;
 import anpaint.Commands.Command;
 import anpaint.Commands.Invokers.*;
 import java.awt.*;
@@ -13,11 +14,11 @@ public class AppWindow extends JFrame {
     //single instance, used globally
     private static AppWindow _instance;
     //data used within the class
-    DrawPanel _drawPanel;
-    JComboBox _shapesDDL;
-    JComboBox _colourDDL;
-    JComboBox _lineWeightDDL;
-    JComboBox _lineStyleDDL;
+    private DrawPanel _drawPanel;
+    private JComboBox _shapesDDL;
+    private JComboBox _colourDDL;
+    private JComboBox _lineWeightDDL;
+    private JComboBox _lineStyleDDL;
     private String[] _shapes = { "Line", "Rectangle", "Circle", "Triangle" };
     private String[] _colours = { "Black", "Red", "Green", "Blue" };
     private String[] _weight = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
@@ -25,12 +26,14 @@ public class AppWindow extends JFrame {
     //a "history" of commands
     public Stack<Command> _cmds;
     public Stack<Command> _cmdsBackup;
+    public boolean _draw;
 
     //singleton related methods
     private AppWindow() {
         _cmds = new Stack<>();
         _cmdsBackup = new Stack<>();
         _instance = this;
+        _draw = true;
         buildFrame();
         buildMenu();
         buildToolbar();
@@ -43,12 +46,12 @@ public class AppWindow extends JFrame {
             _instance = new AppWindow();
         return _instance;
     }
-    
+
     //clear backup (cannot redo when something new is done)
     public void clearBackup() {
         _cmdsBackup.clear();
     }
-    
+
     public void addCommand(Command cmd) {
         _cmds.add(cmd);
     }
@@ -61,14 +64,14 @@ public class AppWindow extends JFrame {
     public String getColour() {
         return _colourDDL.getSelectedItem().toString();
     }
-    
+
     public boolean getLineType() {
         return _lineStyleDDL.getSelectedItem().toString().equals("Solid") ? true : false;
     }
-    
+
     public int getWeight() {
         int returnValue = 0;
-        
+
         switch (_lineWeightDDL.getSelectedItem().toString()) {
             case "1":
                 returnValue = 1;
@@ -101,7 +104,7 @@ public class AppWindow extends JFrame {
                 returnValue = 10;
                 break;
         }
-        
+
         return returnValue;
     }
 
@@ -114,6 +117,7 @@ public class AppWindow extends JFrame {
 
         //instantiate a panel to draw shapes on
         _drawPanel = new DrawPanel(_instance);
+        _drawPanel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 
         //set all the frame properties
         this.setTitle("AN Paint");
@@ -145,10 +149,10 @@ public class AppWindow extends JFrame {
         _load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         _exit = new JMenuItem("Exit");
         _exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-        
-        //pass in the receiver, the command list, and type of command to create
+        _save.addActionListener(new InvokeSave(_drawPanel));
+        _load.addActionListener(new InvokeLoad(_drawPanel));
         _exit.addActionListener(new InvokeExit(_drawPanel));
-        
+
         //add menuitems to menu
         _file.add(_save);
         _file.add(_load);
@@ -163,7 +167,7 @@ public class AppWindow extends JFrame {
         _undo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
         _redo = new JMenuItem("Redo");
         _redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
-        
+
         //undo the last commands
         //have to use anonymous inner class to access _cmds
         _undo.addActionListener(new ActionListener(){
@@ -179,7 +183,7 @@ public class AppWindow extends JFrame {
                 }
             }
         });
-        
+
         //redo the last commands
         //have to use anonymous inner class to access _cmds
         _redo.addActionListener(new ActionListener(){
@@ -194,7 +198,7 @@ public class AppWindow extends JFrame {
                 }
             }
         });
-        
+
         _edit.add(_copy);
         _edit.add(_paste);
         _edit.add(_undo);
@@ -222,6 +226,16 @@ public class AppWindow extends JFrame {
         //selection Tool
         _selectionTool = new JButton("Selection Tool");
         _selectionTool.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        //adding the action listener to know the selection tool is active
+        _selectionTool.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                _draw = false;
+                _drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+        });
+
         _toolBar.add(_selectionTool);
         _toolBar.add(Box.createRigidArea(new Dimension(0,35)));
 
@@ -258,6 +272,16 @@ public class AppWindow extends JFrame {
 
         _shapeTool = new JButton("Shape Tool");
         _shapeTool.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        //adding the action listener to know the shape tool is active
+        _shapeTool.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                _draw = true;
+                _drawPanel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+            }
+        });
+
         _toolBar.add(_shapeTool);
         _toolBar.add(Box.createRigidArea(new Dimension(0,35)));
 
@@ -269,14 +293,46 @@ public class AppWindow extends JFrame {
 
         _group = new JButton("Group");
         _group.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        _group.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                _drawPanel.groupShapes();
+            }
+        });
+
         _toolBar.add(_group);
 
         _ungroup = new JButton("Ungroup");
         _ungroup.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        _ungroup.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                _drawPanel.unGroupShapes();
+            }
+        });
+
         _toolBar.add(_ungroup);
 
         //add the toolbar to the panel within the frame
         this.add(_toolBar, BorderLayout.WEST);
+    }
+    
+    protected void setCommands(Stack<Command> cmds)
+    {
+        _cmds = cmds;
+    }
+    
+    protected void setCommandsBackup(Stack<Command> bu)
+    {
+        _cmdsBackup = bu;
+    }
+    
+    protected void clearCommandsBackup()
+    {
+        _cmds.clear();
+        _cmdsBackup.clear();
     }
 
     //changes the maximum size of a java component, so it doesn't stretch to fill the layout

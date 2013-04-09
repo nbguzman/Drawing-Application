@@ -1,6 +1,7 @@
 package anpaint;
 
 import anpaint.BasicShapes.*;
+import anpaint.Commands.Command;
 import anpaint.Commands.DrawCommand;
 import anpaint.Creators.*;
 import java.awt.Color;
@@ -8,7 +9,17 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Stack;
 import javax.swing.JPanel;
 
 /**
@@ -52,11 +63,42 @@ public class DrawPanel extends JPanel {
             _shapeSet.get(i).draw(g);
         }
     }
-
-    public void load() {
+    
+    public void removeCmdHistory() {
+        _window.clearCommandsBackup();
     }
 
+    // will have to find a way to parse the file
+    public void load() {
+        try {
+            FileInputStream fileIn = new FileInputStream("shapes");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            setCurrentSet((ArrayList<BasicShape>) in.readObject());
+            in.close();
+            fileIn.close();
+            setBackupSet(_shapeSet);
+            removeCmdHistory();
+            refreshCanvas();
+        } catch (Exception ex) {
+            System.out.println("Loading error, StackTrace:");
+            ex.printStackTrace();
+        }
+    }
+
+    // will have to redo the file formatting to make it easier to parse
     public void save() {
+        if (!_shapeSet.isEmpty()) {
+            try {
+                FileOutputStream fileOut = new FileOutputStream("shapes");
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                out.writeObject(_shapeSet);
+                out.close();
+                fileOut.close();
+            } catch (Exception ex) {
+                System.out.println("Saving error, StackTrace:");
+                ex.printStackTrace();
+            }
+        }
     }
 
     public void exit() {
@@ -78,25 +120,25 @@ public class DrawPanel extends JPanel {
             repaint();
         }
     }
-    
+
     public ArrayList<BasicShape> getCurrentSet() {
         return _shapeSet;
     }
-    
+
     public void setCurrentSet(ArrayList<BasicShape> source) {
         _shapeSet = new ArrayList<>(source);
         repaint();
     }
-    
+
     public ArrayList<BasicShape> getBackupSet() {
         return _backup;
     }
-    
+
     public void setBackupSet(ArrayList<BasicShape> source) {
         _backup = new ArrayList<>(source);
         repaint();
     }
-    
+
     public void refreshCanvas() {
         repaint();
     }
@@ -117,31 +159,109 @@ public class DrawPanel extends JPanel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                BasicShape shape;
-                DrawCommand dc;
-
-                switch (_window.getShapeType()) {
-                    case "Rectangle":
-                        shape = _rectangleFactory.createShape(_point, e, _window);
-                        break;
-                    case "Triangle":
-                        shape = _triangleFactory.createShape(_point, e, _window);
-                        break;
-                    case "Circle":
-                        shape = _circleFactory.createShape(_point, e, _window);
-                        break;
-                    case "Line":
-                        shape = _lineFactory.createShape(_point, e, _window);
-                        break;
-                    default:
-                        shape = _lineFactory.createShape(_point, e, _window);
-                        break;
+                if (_window._draw) {
+                    drawShape(e);
+                } else {
+                    selectShapes(e);
                 }
-                _shapeSet.add(shape);
-                _window.addCommand(new DrawCommand((DrawPanel)e.getComponent()));
-                _window.clearBackup();
                 repaint();
             }
         });
+    }
+
+    private void drawShape(MouseEvent e) {
+        BasicShape shape;
+
+        switch (_window.getShapeType()) {
+            case "Rectangle":
+                shape = _rectangleFactory.createShape(_point, e, _window);
+                break;
+            case "Triangle":
+                shape = _triangleFactory.createShape(_point, e, _window);
+                break;
+            case "Circle":
+                shape = _circleFactory.createShape(_point, e, _window);
+                break;
+            case "Line":
+                shape = _lineFactory.createShape(_point, e, _window);
+                break;
+            default:
+                shape = _lineFactory.createShape(_point, e, _window);
+                break;
+        }
+        _shapeSet.add(shape);
+        _window.addCommand(new DrawCommand((DrawPanel) e.getComponent()));
+        _window.clearBackup();
+    }
+
+    private void selectShapes(MouseEvent e) {
+        int smallX, bigX, smallY, bigY;
+
+        if (e.getX() < _point.x) {
+            bigX = _point.x;
+            smallX = e.getX();
+        } else {
+            bigX = e.getX();
+            smallX = _point.x;
+        }
+
+        if (e.getY() < _point.y) {
+            bigY = _point.y;
+            smallY = e.getY();
+        } else {
+            bigY = e.getY();
+            smallY = _point.y;
+        }
+
+        for (int i = 0; i < _shapeSet.size(); i++) {
+            ArrayList<Point> pointSet = _shapeSet.get(i)._pointSet;
+
+            if (_shapeSet.get(i)._selected) {
+                _shapeSet.get(i).toggleSelected();
+            }
+
+            for (int j = 0; j < pointSet.size(); j++) {
+                int x = pointSet.get(j).x;
+                int y = pointSet.get(j).y;
+
+                if (x < bigX && x > smallX && y < bigY && y > smallY) {
+                    _shapeSet.get(i).toggleSelected();
+                    System.out.println("Shape " + i + " Selected: " + _shapeSet.get(i)._selected);
+                    j = pointSet.size();
+                }
+            }
+        }
+    }
+
+    public void groupShapes() {
+        Group group = new Group();
+        int n = _shapeSet.size();
+        int removed = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (_shapeSet.get(i - removed)._selected) {
+                _shapeSet.get(i - removed).toggleSelected();
+                group.add(_shapeSet.get(i - removed));
+                _shapeSet.remove(i - removed);
+                removed++;
+            }
+        }
+
+        _shapeSet.add(group);
+    }
+
+    public void unGroupShapes() {
+        int n = _shapeSet.size();
+
+        for (int i = 0; i < n; i++) {
+            if (_shapeSet.get(i)._selected && _shapeSet.get(i) instanceof Group) {
+                ArrayList<BasicShape> adding = _shapeSet.get(i).getChildren();
+                _shapeSet.remove(i);
+
+                for (int j = 0; j < adding.size(); j++) {
+                    _shapeSet.add(adding.get(j));
+                }
+            }
+        }
     }
 }

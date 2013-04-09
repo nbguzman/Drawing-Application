@@ -1,8 +1,6 @@
 package anpaint.BasicShapes;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.util.ArrayList;
 
 //the Group class a composite object which contains all leafs that are grouped together
@@ -11,21 +9,25 @@ public class Group extends BasicShape{
     private ArrayList<BasicShape> _graphicSet;
 
     public Group() {
-        _graphicSet = new ArrayList<BasicShape>();
+        _graphicSet = new ArrayList<>();
+        _pointSet = new ArrayList<>();
     }
 
     @Override
-    void add(BasicShape shape) {
+    public void add(BasicShape shape) {
         _graphicSet.add(shape);
+
+        for (int i = 0; i < shape._pointSet.size(); i++)
+            _pointSet.add(shape._pointSet.get(i));
     }
 
     @Override
-    void remove(BasicShape shape) {
+    public void remove(BasicShape shape) {
         _graphicSet.remove(shape);
     }
 
     @Override
-    ArrayList<BasicShape> getChildren() {
+    public ArrayList<BasicShape> getChildren() {
         return _graphicSet;
     }
 
@@ -36,19 +38,21 @@ public class Group extends BasicShape{
     }
 
     @Override
-    void moveShape(int dx, int dy) {
+    public void moveShape(int dx, int dy) {
         for (int i = 0; i < _graphicSet.size(); i++)
             _graphicSet.get(i).moveShape(dx, dy);
     }
 
     @Override
-    void resize() {
+    public void resize() {
         for (int i = 0; i < _graphicSet.size(); i++)
             _graphicSet.get(i).resize();
     }
 
     @Override
-    void toggleSelected() {
+    public void toggleSelected() {
+        _selected = ! _selected;
+
         for (int i =0; i < _graphicSet.size(); i++)
             _graphicSet.get(i).toggleSelected();
     }
