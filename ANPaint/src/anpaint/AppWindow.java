@@ -318,6 +318,22 @@ public class AppWindow extends JFrame {
         //add the toolbar to the panel within the frame
         this.add(_toolBar, BorderLayout.WEST);
     }
+    
+    protected void setCommands(Stack<Command> cmds)
+    {
+        _cmds = cmds;
+    }
+    
+    protected void setCommandsBackup(Stack<Command> bu)
+    {
+        _cmdsBackup = bu;
+    }
+    
+    protected void clearCommandsBackup()
+    {
+        _cmds.clear();
+        _cmdsBackup.clear();
+    }
 
     //changes the maximum size of a java component, so it doesn't stretch to fill the layout
     private void setMaxSize(JComponent jc) {

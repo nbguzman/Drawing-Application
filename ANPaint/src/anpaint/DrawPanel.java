@@ -1,6 +1,7 @@
 package anpaint;
 
 import anpaint.BasicShapes.*;
+import anpaint.Commands.Command;
 import anpaint.Commands.DrawCommand;
 import anpaint.Creators.*;
 import java.awt.Color;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Stack;
 import javax.swing.JPanel;
 
 /**
@@ -61,15 +63,21 @@ public class DrawPanel extends JPanel {
             _shapeSet.get(i).draw(g);
         }
     }
+    
+    public void removeCmdHistory() {
+        _window.clearCommandsBackup();
+    }
 
     // will have to find a way to parse the file
     public void load() {
         try {
             FileInputStream fileIn = new FileInputStream("shapes");
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            _shapeSet = (ArrayList<BasicShape>) in.readObject();
+            setCurrentSet((ArrayList<BasicShape>) in.readObject());
             in.close();
             fileIn.close();
+            setBackupSet(_shapeSet);
+            removeCmdHistory();
             refreshCanvas();
         } catch (Exception ex) {
             System.out.println("Loading error, StackTrace:");
@@ -79,11 +87,6 @@ public class DrawPanel extends JPanel {
 
     // will have to redo the file formatting to make it easier to parse
     public void save() {
-        ArrayList<BasicShape> circles = new ArrayList<>();
-        ArrayList<BasicShape> lines = new ArrayList<>();
-        ArrayList<BasicShape> triangles = new ArrayList<>();
-        ArrayList<BasicShape> rectangles = new ArrayList<>();
-
         if (!_shapeSet.isEmpty()) {
             try {
                 FileOutputStream fileOut = new FileOutputStream("shapes");
