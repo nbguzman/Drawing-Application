@@ -210,6 +210,8 @@ public class AppWindow extends JFrame {
     private void buildToolbar() {
         JToolBar _toolBar;
         JButton _shapeTool;
+        JButton _moveTool;
+        JButton _resizeTool;
         JButton _group;
         JButton _ungroup;
         JButton _selectionTool;
@@ -222,21 +224,6 @@ public class AppWindow extends JFrame {
 
         //creating and adding the objects the the toolbar
         _toolBar.add(Box.createRigidArea(new Dimension(0,20)));
-        //selection Tool
-        _selectionTool = new JButton("Selection Tool");
-        _selectionTool.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        //adding the action listener to know the selection tool is active
-        _selectionTool.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                _draw = false;
-                _drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
-        });
-
-        _toolBar.add(_selectionTool);
-        _toolBar.add(Box.createRigidArea(new Dimension(0,35)));
 
         //shape tool
         JLabel tempLbl = new JLabel("Shape Options");
@@ -282,7 +269,49 @@ public class AppWindow extends JFrame {
         });
 
         _toolBar.add(_shapeTool);
-        _toolBar.add(Box.createRigidArea(new Dimension(0,35)));
+        _toolBar.add(Box.createRigidArea(new Dimension(0,5)));
+
+        _moveTool = new JButton("Move Tool");
+        _moveTool.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        _moveTool.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                _drawPanel.setCursor(new Cursor(Cursor.MOVE_CURSOR));
+            }
+        });
+
+        _toolBar.add(_moveTool);
+        _toolBar.add(Box.createRigidArea(new Dimension(0,5)));
+
+        _resizeTool = new JButton("Resize Tool");
+        _resizeTool.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        _resizeTool.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                _drawPanel.setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));
+            }
+        });
+
+        _toolBar.add(_resizeTool);
+        _toolBar.add(Box.createRigidArea(new Dimension(0,5)));
+
+        //selection Tool
+        _selectionTool = new JButton("Selection Tool");
+        _selectionTool.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        //adding the action listener to know the selection tool is active
+        _selectionTool.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                _draw = false;
+                _drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+        });
+
+        _toolBar.add(_selectionTool);
+        _toolBar.add(Box.createRigidArea(new Dimension(0,30)));
 
         //grouping options
         tempLbl = new JLabel("Gouping Options");
@@ -301,6 +330,7 @@ public class AppWindow extends JFrame {
         });
 
         _toolBar.add(_group);
+        _toolBar.add(Box.createRigidArea(new Dimension(0,5)));
 
         _ungroup = new JButton("Ungroup");
         _ungroup.setAlignmentX(Component.CENTER_ALIGNMENT);
