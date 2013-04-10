@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -20,7 +21,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Stack;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * The DrawPanel class will contain the implementations of the various commands
@@ -63,7 +66,7 @@ public class DrawPanel extends JPanel {
             _shapeSet.get(i).draw(g);
         }
     }
-    
+
     public void removeCmdHistory() {
         _window.clearCommandsBackup();
     }
@@ -71,14 +74,25 @@ public class DrawPanel extends JPanel {
     // will have to find a way to parse the file
     public void load() {
         try {
-            FileInputStream fileIn = new FileInputStream("shapes");
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            setCurrentSet((ArrayList<BasicShape>) in.readObject());
-            in.close();
-            fileIn.close();
-            setBackupSet(_shapeSet);
-            removeCmdHistory();
-            refreshCanvas();
+            JFileChooser chooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    "Neal Paint Images", "nap");
+            chooser.setFileFilter(filter);
+            int returnVal;
+            returnVal = chooser.showOpenDialog(_window);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                FileInputStream fileIn = new FileInputStream(file);
+                ObjectInputStream in = new ObjectInputStream(fileIn);
+                setCurrentSet((ArrayList<BasicShape>) in.readObject());
+                in.close();
+                fileIn.close();
+                setBackupSet(_shapeSet);
+                removeCmdHistory();
+                refreshCanvas();
+            }
+
+
         } catch (Exception ex) {
             System.out.println("Loading error, StackTrace:");
             ex.printStackTrace();
@@ -89,11 +103,23 @@ public class DrawPanel extends JPanel {
     public void save() {
         if (!_shapeSet.isEmpty()) {
             try {
-                FileOutputStream fileOut = new FileOutputStream("shapes");
-                ObjectOutputStream out = new ObjectOutputStream(fileOut);
-                out.writeObject(_shapeSet);
-                out.close();
-                fileOut.close();
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "Neal Paint Images", "nap");
+                chooser.setFileFilter(filter);
+                int returnVal;
+                returnVal = chooser.showSaveDialog(_window);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = chooser.getSelectedFile();
+                    if (!chooser.getSelectedFile().getAbsolutePath().endsWith(".nap")) {
+                        file = new File(chooser.getSelectedFile() + ".nap");
+                    }
+                    FileOutputStream fileOut = new FileOutputStream(file);
+                    ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                    out.writeObject(_shapeSet);
+                    out.close();
+                    fileOut.close();
+                }
             } catch (Exception ex) {
                 System.out.println("Saving error, StackTrace:");
                 ex.printStackTrace();
