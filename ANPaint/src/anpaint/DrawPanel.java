@@ -141,13 +141,17 @@ public class DrawPanel extends JPanel {
                 if (bs.getSelected()) {
                     if (bs instanceof Circle) {
                         tempBS = _circleFactory.cloneShape(bs);
-                    } else if (Line.class == bs.getClass()) {
+                    } 
+                    else if (bs instanceof Line) {
                         tempBS = _lineFactory.cloneShape(bs);
-                    } else if (Triangle.class == bs.getClass()) {
+                    } 
+                    else if (bs instanceof Triangle) {
                         tempBS = _triangleFactory.cloneShape(bs);
-                    } else if (Rectangle.class == bs.getClass()) {
+                    } 
+                    else if (bs instanceof Rectangle) {
                         tempBS = _rectangleFactory.cloneShape(bs);
-                    } else if (Group.class == bs.getClass()) {
+                    } 
+                    else if (bs instanceof Group) {
                         tempBS = new Group((Group) bs);
                     }
                     if (tempBS != null) {

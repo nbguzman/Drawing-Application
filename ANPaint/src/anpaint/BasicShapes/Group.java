@@ -1,5 +1,9 @@
 package anpaint.BasicShapes;
 
+import anpaint.Creators.CircleShapeCreator;
+import anpaint.Creators.LineShapeCreator;
+import anpaint.Creators.RectangleShapeCreator;
+import anpaint.Creators.TriangleShapeCreator;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.io.Serializable;
@@ -26,6 +30,33 @@ public class Group extends BasicShape implements Serializable{
         _selected = source._selected;
         _graphicSet = source._graphicSet;
         
+        this._graphicSet = new ArrayList<>();
+        n = source._graphicSet.size();
+        BasicShape shape;
+        RectangleShapeCreator _rectangleFactory = new RectangleShapeCreator();
+        CircleShapeCreator _circleFactory = new CircleShapeCreator();
+        LineShapeCreator _lineFactory = new LineShapeCreator();
+        TriangleShapeCreator _triangleFactory = new TriangleShapeCreator();
+        
+        for (int i = 0; i < n; i++) {
+            if (source._graphicSet.get(i) instanceof Circle) {
+                shape = _circleFactory.cloneShape(source._graphicSet.get(i));
+            } 
+            else if (source._graphicSet.get(i) instanceof Line) {
+                shape = _lineFactory.cloneShape(source._graphicSet.get(i));
+            } 
+            else if (source._graphicSet.get(i) instanceof Triangle) {
+                shape = _triangleFactory.cloneShape(source._graphicSet.get(i));
+            } 
+            else if (source._graphicSet.get(i) instanceof Rectangle) {
+                shape = _rectangleFactory.cloneShape(source._graphicSet.get(i));
+            } 
+            else {
+                shape = new Group((Group) source._graphicSet.get(i));
+            }
+            
+            this._graphicSet.add(shape);
+        }
     }
     
     @Override
