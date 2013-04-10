@@ -4,10 +4,11 @@ import anpaint.DrawMethods.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 //the Rectangle class is a leaf that describes a rectangle with varying width and height
-public class Rectangle extends BasicShape {
+public class Rectangle extends BasicShape implements Serializable{
 
     public Rectangle() {
         this(new Point(),new Point(),new Color(0),false,0);
@@ -76,5 +77,9 @@ public class Rectangle extends BasicShape {
     @Override
     public void toggleSelected() {
         _selected = !_selected;
+    }
+    
+    public String toString() {
+        return "Rectangle";
     }
 }

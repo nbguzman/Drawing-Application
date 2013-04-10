@@ -4,6 +4,7 @@ import anpaint.DrawMethods.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /*
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 * the Circle class needs a radius to know how to paint
 * the containing point in its _pointSet is the top left corner (of a containing square)
 */
-public class Circle extends BasicShape{
+public class Circle extends BasicShape implements Serializable{
 
     public int _radius;
 
@@ -62,5 +63,9 @@ public class Circle extends BasicShape{
     @Override
     public void toggleSelected() {
         _selected = !_selected;
+    }
+    
+    public String toString() {
+        return "Cicle";
     }
 }
