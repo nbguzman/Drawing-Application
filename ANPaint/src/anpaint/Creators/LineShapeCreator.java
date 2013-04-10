@@ -35,4 +35,10 @@ public class LineShapeCreator extends ShapeCreator {
 
         return new Line(point, new Point(e.getX(), e.getY()), colour, window.getLineType(), window.getWeight());
     }
+    
+    @Override
+    public BasicShape cloneShape(BasicShape src) {
+        Line line = new Line((Line) src);
+        return line;
+    }
 }

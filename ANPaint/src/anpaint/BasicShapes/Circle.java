@@ -18,7 +18,10 @@ public class Circle extends BasicShape implements Serializable{
 
     public Circle(Circle source) {
         this._colour = source._colour;
-        this._pointSet = source._pointSet;
+        this._pointSet = new ArrayList<>();
+        int n = source._pointSet.size();
+        for (int i = 0; i < n; i++)
+            this._pointSet.add(new Point(source._pointSet.get(i)));
         this._style = source._style;
         this._weight = source._weight;
         this._selected = source._selected;

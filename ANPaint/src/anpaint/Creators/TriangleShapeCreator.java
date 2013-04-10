@@ -36,4 +36,10 @@ public class TriangleShapeCreator extends ShapeCreator {
         int height = e.getY() - point.y;
         return new Triangle(point, new Point(point.x - height / 2, point.y + height), new Point(point.x + height / 2, point.y + height), colour, window.getLineType(), window.getWeight());
     }
+
+    @Override
+    public BasicShape cloneShape(BasicShape src) {
+        Triangle triangle = new Triangle((Triangle) src);
+        return triangle;
+    }
 }

@@ -1,6 +1,7 @@
 package anpaint.BasicShapes;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -16,11 +17,15 @@ public class Group extends BasicShape implements Serializable{
 
     public Group(Group source) {
         _colour = source._colour;
-        _pointSet = source._pointSet;
+        this._pointSet = new ArrayList<>();
+        int n = source._pointSet.size();
+        for (int i = 0; i < n; i++)
+            this._pointSet.add(new Point(source._pointSet.get(i)));
         _style = source._style;
         _weight = source._weight;
         _selected = source._selected;
         _graphicSet = source._graphicSet;
+        
     }
     
     @Override

@@ -140,20 +140,21 @@ public class DrawPanel extends JPanel {
             for (BasicShape bs : _shapeSet) {
                 if (bs.getSelected()) {
                     if (bs instanceof Circle) {
-                        tempBS = new Circle((Circle) bs);
+                        tempBS = _circleFactory.cloneShape(bs);
                     } else if (Line.class == bs.getClass()) {
-                        tempBS = new Line((Line) bs);
+                        tempBS = _lineFactory.cloneShape(bs);
                     } else if (Triangle.class == bs.getClass()) {
-                        tempBS = new Triangle((Triangle) bs);
+                        tempBS = _triangleFactory.cloneShape(bs);
                     } else if (Rectangle.class == bs.getClass()) {
-                        tempBS = new Rectangle((Rectangle) bs);
+                        tempBS = _rectangleFactory.cloneShape(bs);
                     } else if (Group.class == bs.getClass()) {
                         tempBS = new Group((Group) bs);
                     }
                     if (tempBS != null) {
+                        tempBS.moveShape(-tempBS._pointSet.get(0).x, -tempBS._pointSet.get(0).y);
                         _copyBuffer.add(tempBS);
                     }
-                    System.out.println(bs + "copied\n");
+                    System.out.println(bs + "copied");
                 }
             }
         } catch (Exception ex) {
@@ -167,7 +168,7 @@ public class DrawPanel extends JPanel {
             ArrayList<BasicShape> temp = new ArrayList<>();
             if (_copyBuffer != null) {
                 for (BasicShape bs : _copyBuffer) {
-                    bs.moveShape(-bs._pointSet.get(0).x, -bs._pointSet.get(0).y);
+                    //bs.moveShape(-bs._pointSet.get(0).x, -bs._pointSet.get(0).y);
                     temp.add(bs);
                 }
                 _shapeSet.addAll(temp);
