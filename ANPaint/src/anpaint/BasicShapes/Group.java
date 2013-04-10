@@ -1,10 +1,11 @@
 package anpaint.BasicShapes;
 
 import java.awt.Graphics;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 //the Group class a composite object which contains all leafs that are grouped together
-public class Group extends BasicShape{
+public class Group extends BasicShape implements Serializable{
     //the contained children graphics
     private ArrayList<BasicShape> _graphicSet;
 
@@ -55,5 +56,9 @@ public class Group extends BasicShape{
 
         for (int i =0; i < _graphicSet.size(); i++)
             _graphicSet.get(i).toggleSelected();
+    }
+    
+    public String toString() {
+        return "Group";
     }
 }

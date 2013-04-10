@@ -1,5 +1,9 @@
 package anpaint.Commands.Invokers;
 
+import anpaint.Commands.Command;
+import anpaint.Commands.CopyCommand;
+import anpaint.Commands.LoadCommand;
+import anpaint.DrawPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,10 +12,23 @@ import java.awt.event.ActionListener;
  * CopyCommand when an item has been clicked on the application
  */
 public class InvokeCopy implements ActionListener {
+    Command cmd;
 
+    public InvokeCopy(DrawPanel dp) {
+       cmd = new CopyCommand(dp);
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try
+        {
+           cmd.execute();
+        }
+        catch(Exception ex)
+        {
+            System.out.println("InvokeCopy error, StackTrace:");
+            ex.printStackTrace();
+        }
     }
     
 }

@@ -42,9 +42,14 @@ public class DrawPanel extends JPanel {
     private TriangleShapeCreator _triangleFactory;
     Graphics _g;
     private ArrayList<BasicShape> _backup;
-
+    private ArrayList<BasicShape> _copyBuffer;
+    private ArrayList<BasicShape> _copyBufferBackup;
+    
     public DrawPanel(AppWindow app) {
         _shapeSet = new ArrayList<>();
+        _backup = new ArrayList<>();
+        _copyBuffer = new ArrayList<>();
+        _copyBufferBackup = new ArrayList<>();
         //_window = AppWindow.getInstance();      /** not returning the unique instance **/
         _window = app;
         /**
@@ -133,9 +138,38 @@ public class DrawPanel extends JPanel {
     }
 
     public void copy() {
+        try {
+            for (BasicShape bs : _shapeSet) {
+                if (bs.getSelected()){
+                    _copyBuffer.add(bs);
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println("Copying error, StackTrace:");
+            ex.printStackTrace();
+        }
     }
 
     public void paste() {
+        try {
+            if (_copyBuffer != null)
+                _shapeSet.addAll(_copyBuffer);
+            refreshCanvas();
+        } catch (Exception ex) {
+            System.out.println("Pasting error, StackTrace:");
+            ex.printStackTrace();
+        }
+    }
+    
+    public void undoPaste() {
+        try {
+            if (_shapeSet != null && _copyBuffer != null)
+                _shapeSet.removeAll(_copyBuffer);
+            refreshCanvas();
+        } catch (Exception ex) {
+            System.out.println("Undoing paste error, StackTrace:");
+            ex.printStackTrace();
+        }
     }
 
     //remove the last drawing done
@@ -163,6 +197,28 @@ public class DrawPanel extends JPanel {
     public void setBackupSet(ArrayList<BasicShape> source) {
         _backup = new ArrayList<>(source);
         repaint();
+    }
+    
+    public ArrayList<BasicShape> getCBuffer() {
+        return _copyBuffer;
+    }
+
+    public void setCBuffer(ArrayList<BasicShape> source) {
+        _copyBuffer = new ArrayList<>(source);
+        repaint();
+    }
+    
+    public ArrayList<BasicShape> getCBufferBackup() {
+        return _copyBufferBackup;
+    }
+
+    public void setCBufferBackup(ArrayList<BasicShape> source) {
+        _copyBufferBackup = new ArrayList<>(source);
+        repaint();
+    }
+    
+    public void clearCopyBuffer() {
+        _copyBuffer.clear();
     }
 
     public void refreshCanvas() {

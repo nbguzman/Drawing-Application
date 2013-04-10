@@ -35,4 +35,8 @@ public abstract class BasicShape extends Object implements Serializable{
     }
     public abstract void resize();
     public abstract void toggleSelected();
+    
+    public boolean getSelected() {
+        return _selected;
+    }
 }
