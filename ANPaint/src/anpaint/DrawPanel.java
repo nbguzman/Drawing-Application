@@ -1,6 +1,7 @@
 package anpaint;
 
 import anpaint.BasicShapes.*;
+import anpaint.Commands.Command;
 import anpaint.Commands.DrawCommand;
 import anpaint.Creators.*;
 import java.awt.Color;
@@ -8,8 +9,21 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Stack;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * The DrawPanel class will contain the implementations of the various commands
@@ -53,10 +67,64 @@ public class DrawPanel extends JPanel {
         }
     }
 
-    public void load() {
+    public void removeCmdHistory() {
+        _window.clearCommandsBackup();
     }
 
+    // will have to find a way to parse the file
+    public void load() {
+        try {
+            JFileChooser chooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    "Neal Paint Images", "nap");
+            chooser.setFileFilter(filter);
+            int returnVal;
+            returnVal = chooser.showOpenDialog(_window);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                FileInputStream fileIn = new FileInputStream(file);
+                ObjectInputStream in = new ObjectInputStream(fileIn);
+                setCurrentSet((ArrayList<BasicShape>) in.readObject());
+                in.close();
+                fileIn.close();
+                setBackupSet(_shapeSet);
+                removeCmdHistory();
+                refreshCanvas();
+            }
+
+
+        } catch (Exception ex) {
+            System.out.println("Loading error, StackTrace:");
+            ex.printStackTrace();
+        }
+    }
+
+    // will have to redo the file formatting to make it easier to parse
     public void save() {
+        if (!_shapeSet.isEmpty()) {
+            try {
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "Neal Paint Images", "nap");
+                chooser.setFileFilter(filter);
+                int returnVal;
+                returnVal = chooser.showSaveDialog(_window);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = chooser.getSelectedFile();
+                    if (!chooser.getSelectedFile().getAbsolutePath().endsWith(".nap")) {
+                        file = new File(chooser.getSelectedFile() + ".nap");
+                    }
+                    FileOutputStream fileOut = new FileOutputStream(file);
+                    ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                    out.writeObject(_shapeSet);
+                    out.close();
+                    fileOut.close();
+                }
+            } catch (Exception ex) {
+                System.out.println("Saving error, StackTrace:");
+                ex.printStackTrace();
+            }
+        }
     }
 
     public void exit() {
@@ -97,6 +165,10 @@ public class DrawPanel extends JPanel {
         repaint();
     }
 
+    public void refreshCanvas() {
+        repaint();
+    }
+
     private void addListeners() {
         //this gets the initial click of the mouse
         this.addMouseListener(new MouseAdapter() {
@@ -115,12 +187,9 @@ public class DrawPanel extends JPanel {
             public void mouseReleased(MouseEvent e) {
                 if (_window._draw) {
                     drawShape(e);
-                }
-
-                else {
+                } else {
                     selectShapes(e);
                 }
-
                 repaint();
             }
         });
@@ -147,7 +216,7 @@ public class DrawPanel extends JPanel {
                 break;
         }
         _shapeSet.add(shape);
-        _window.addCommand(new DrawCommand((DrawPanel)e.getComponent()));
+        _window.addCommand(new DrawCommand((DrawPanel) e.getComponent()));
         _window.clearBackup();
     }
 
@@ -157,9 +226,7 @@ public class DrawPanel extends JPanel {
         if (e.getX() < _point.x) {
             bigX = _point.x;
             smallX = e.getX();
-        }
-
-        else {
+        } else {
             bigX = e.getX();
             smallX = _point.x;
         }
@@ -167,9 +234,7 @@ public class DrawPanel extends JPanel {
         if (e.getY() < _point.y) {
             bigY = _point.y;
             smallY = e.getY();
-        }
-
-        else {
+        } else {
             bigY = e.getY();
             smallY = _point.y;
         }
@@ -177,8 +242,9 @@ public class DrawPanel extends JPanel {
         for (int i = 0; i < _shapeSet.size(); i++) {
             ArrayList<Point> pointSet = _shapeSet.get(i)._pointSet;
 
-            if (_shapeSet.get(i)._selected)
+            if (_shapeSet.get(i)._selected) {
                 _shapeSet.get(i).toggleSelected();
+            }
 
             for (int j = 0; j < pointSet.size(); j++) {
                 int x = pointSet.get(j).x;
@@ -198,7 +264,7 @@ public class DrawPanel extends JPanel {
         int n = _shapeSet.size();
         int removed = 0;
 
-        for (int i = 0; i < n ; i++) {
+        for (int i = 0; i < n; i++) {
             if (_shapeSet.get(i - removed)._selected) {
                 _shapeSet.get(i - removed).toggleSelected();
                 group.add(_shapeSet.get(i - removed));
@@ -218,8 +284,9 @@ public class DrawPanel extends JPanel {
                 ArrayList<BasicShape> adding = _shapeSet.get(i).getChildren();
                 _shapeSet.remove(i);
 
-                for (int j = 0; j < adding.size(); j++)
+                for (int j = 0; j < adding.size(); j++) {
                     _shapeSet.add(adding.get(j));
+                }
             }
         }
     }

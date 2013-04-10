@@ -1,5 +1,7 @@
 package anpaint.Commands;
 
+import anpaint.DrawPanel;
+
 /**
  * The LoadCommand class will handle the loading of previous files saved
  * by this application. Will implement a way to load coordinates for each shape
@@ -12,12 +14,14 @@ package anpaint.Commands;
  * This is part of the Command Pattern
  */
 public class LoadCommand implements Command {
-    public LoadCommand() {
-        
+    DrawPanel __drawPanel;
+    
+    public LoadCommand(DrawPanel dp) {
+        __drawPanel = dp;
     }
     
     public void execute() {
-        
+        __drawPanel.load();
     }
     
     // Will not be implemented - should not undo a Load

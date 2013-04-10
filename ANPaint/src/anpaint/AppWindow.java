@@ -149,8 +149,8 @@ public class AppWindow extends JFrame {
         _load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         _exit = new JMenuItem("Exit");
         _exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-
-        //pass in the receiver, the command list, and type of command to create
+        _save.addActionListener(new InvokeSave(_drawPanel));
+        _load.addActionListener(new InvokeLoad(_drawPanel));
         _exit.addActionListener(new InvokeExit(_drawPanel));
 
         //add menuitems to menu
@@ -317,6 +317,22 @@ public class AppWindow extends JFrame {
 
         //add the toolbar to the panel within the frame
         this.add(_toolBar, BorderLayout.WEST);
+    }
+    
+    protected void setCommands(Stack<Command> cmds)
+    {
+        _cmds = cmds;
+    }
+    
+    protected void setCommandsBackup(Stack<Command> bu)
+    {
+        _cmdsBackup = bu;
+    }
+    
+    protected void clearCommandsBackup()
+    {
+        _cmds.clear();
+        _cmdsBackup.clear();
     }
 
     //changes the maximum size of a java component, so it doesn't stretch to fill the layout
