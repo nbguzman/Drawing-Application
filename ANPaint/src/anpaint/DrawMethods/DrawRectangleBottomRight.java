@@ -11,6 +11,8 @@ public class DrawRectangleBottomRight extends DrawTemplate {
 
     @Override
     void draw(int i, BasicShape shape, Graphics g) {
-        g.drawRect(shape._pointSet.get(0).x + i, shape._pointSet.get(0).y + i, shape._pointSet.get(1).x - shape._pointSet.get(0).x - (i * 2), shape._pointSet.get(1).y - shape._pointSet.get(0).y - (i * 2));
+        int y0 = shape._pointSet.get(0).y;
+        int x0 = shape._pointSet.get(0).x;
+        g.drawRect(x0 + i, y0 + i, shape._pointSet.get(1).x - x0 - (i * 2), shape._pointSet.get(1).y - y0 - (i * 2));
     }
 }
