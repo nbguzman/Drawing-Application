@@ -117,13 +117,25 @@ public class DrawPanel extends JPanel {
                     drawShape(e);
                 }
 
-                else {
+                else if (_window._select) {
                     selectShapes(e);
+                }
+
+                else if (_window._resize) {
+
+                }
+
+                else if (_window._move) {
+
                 }
 
                 repaint();
             }
         });
+    }
+
+    private void moveShape(MouseEvent e) {
+        
     }
 
     private void drawShape(MouseEvent e) {

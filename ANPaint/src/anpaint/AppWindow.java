@@ -26,6 +26,9 @@ public class AppWindow extends JFrame {
     public Stack<Command> _cmds;
     public Stack<Command> _cmdsBackup;
     public boolean _draw;
+    public boolean _select;
+    public boolean _move;
+    public boolean _resize;
 
     //singleton related methods
     private AppWindow() {
@@ -33,6 +36,9 @@ public class AppWindow extends JFrame {
         _cmdsBackup = new Stack<>();
         _instance = this;
         _draw = true;
+        _select = false;
+        _move = false;
+        _resize = false;
         buildFrame();
         buildMenu();
         buildToolbar();
@@ -264,6 +270,9 @@ public class AppWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 _draw = true;
+                _select = false;
+                _move = false;
+                _resize = false;
                 _drawPanel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
             }
         });
@@ -277,6 +286,10 @@ public class AppWindow extends JFrame {
         _moveTool.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
+                _draw = false;
+                _select = false;
+                _move = true;
+                _resize = false;
                 _drawPanel.setCursor(new Cursor(Cursor.MOVE_CURSOR));
             }
         });
@@ -290,6 +303,10 @@ public class AppWindow extends JFrame {
         _resizeTool.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
+                _draw = false;
+                _select = false;
+                _move = false;
+                _resize = true;
                 _drawPanel.setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));
             }
         });
@@ -306,6 +323,9 @@ public class AppWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 _draw = false;
+                _select = true;
+                _move = false;
+                _resize = false;
                 _drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
         });
