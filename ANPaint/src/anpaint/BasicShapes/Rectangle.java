@@ -13,6 +13,14 @@ public class Rectangle extends BasicShape implements Serializable{
     public Rectangle() {
         this(new Point(),new Point(),new Color(0),false,0);
     }
+    
+    public Rectangle(Rectangle source) {
+        _colour = source._colour;
+        _pointSet = source._pointSet;
+        _style = source._style;
+        _weight = source._weight;
+        _selected = source._selected;
+    }
 
     public Rectangle(Point p1, Point p2, Color colour, boolean style, int weight) {
         _pointSet = new ArrayList<>();

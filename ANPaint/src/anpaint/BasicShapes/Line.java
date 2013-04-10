@@ -14,6 +14,14 @@ public class Line extends BasicShape implements Serializable{
         this(new Point(),new Point(),new Color(0),false,0);
     }
 
+    public Line(Line source) {
+        _colour = source._colour;
+        _pointSet = source._pointSet;
+        _style = source._style;
+        _weight = source._weight;
+        _selected = source._selected;
+    }
+    
     public Line(Point p1, Point p2, Color colour, boolean style, int weight) {
         _pointSet = new ArrayList<>();
         _pointSet.add(p1);

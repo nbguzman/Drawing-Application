@@ -14,6 +14,15 @@ public class Group extends BasicShape implements Serializable{
         _pointSet = new ArrayList<>();
     }
 
+    public Group(Group source) {
+        _colour = source._colour;
+        _pointSet = source._pointSet;
+        _style = source._style;
+        _weight = source._weight;
+        _selected = source._selected;
+        _graphicSet = source._graphicSet;
+    }
+    
     @Override
     public void add(BasicShape shape) {
         _graphicSet.add(shape);

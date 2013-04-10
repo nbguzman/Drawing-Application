@@ -38,7 +38,7 @@ public class DrawPanel extends JPanel {
     private ArrayList<BasicShape> _copyBuffer;
     private ArrayList<BasicShape> _copyBufferBackup;
     private PanelState _state;
-    
+
     public DrawPanel(AppWindow app) {
         _shapeSet = new ArrayList<>();
         _backup = new ArrayList<>();
@@ -136,7 +136,7 @@ public class DrawPanel extends JPanel {
     public void copy() {
         try {
             for (BasicShape bs : _shapeSet) {
-                if (bs.getSelected()){
+                if (bs.getSelected()) {
                     _copyBuffer.add(bs);
                 }
             }
@@ -148,19 +148,53 @@ public class DrawPanel extends JPanel {
 
     public void paste() {
         try {
-            if (_copyBuffer != null)
-                _shapeSet.addAll(_copyBuffer);
-            refreshCanvas();
+            ArrayList<BasicShape> temp = new ArrayList<>();
+            BasicShape tempBS = null;
+            if (_copyBuffer != null) {
+                for (BasicShape bs : _copyBuffer) {
+                    /*
+                    if (bs instanceof Circle)
+                        tempBS = new Circle((Circle)bs);
+                    else if (bs instanceof Line)
+                        tempBS = new Line((Line)bs);
+                    else if (bs instanceof Triangle)
+                        tempBS = new Triangle((Triangle)bs);
+                    else if (bs instanceof Rectangle)
+                        tempBS = new Rectangle((Rectangle)bs);
+                    else if (bs instanceof Group)
+                        tempBS = new Group((Group)bs);
+                        * */
+                    
+                    if (bs instanceof Circle)
+                       tempBS = new Circle((Circle)bs);
+                    else if (Line.class == bs.getClass())
+                       tempBS = new Line((Line)bs);
+                    else if (Triangle.class == bs.getClass())
+                        tempBS = new Triangle((Triangle)bs);
+                    else if (Rectangle.class == bs.getClass())
+                        tempBS = new Rectangle((Rectangle)bs);
+                    else if (Group.class == bs.getClass())
+                        tempBS = new Group((Group)bs);
+                        
+                      if (tempBS != null) {
+                        tempBS.moveShape(-tempBS._pointSet.get(0).x, -tempBS._pointSet.get(0).y);
+                        temp.add(tempBS);
+                      }
+                }
+                _shapeSet.addAll(temp);
+                refreshCanvas();
+            }
         } catch (Exception ex) {
             System.out.println("Pasting error, StackTrace:");
             ex.printStackTrace();
         }
     }
-    
+
     public void undoPaste() {
         try {
-            if (_shapeSet != null && _copyBuffer != null)
+            if (_shapeSet != null && _copyBuffer != null) {
                 _shapeSet.removeAll(_copyBuffer);
+            }
             refreshCanvas();
         } catch (Exception ex) {
             System.out.println("Undoing paste error, StackTrace:");
@@ -194,7 +228,7 @@ public class DrawPanel extends JPanel {
         _backup = new ArrayList<>(source);
         repaint();
     }
-    
+
     public ArrayList<BasicShape> getCBuffer() {
         return _copyBuffer;
     }
@@ -203,7 +237,7 @@ public class DrawPanel extends JPanel {
         _copyBuffer = new ArrayList<>(source);
         repaint();
     }
-    
+
     public ArrayList<BasicShape> getCBufferBackup() {
         return _copyBufferBackup;
     }
@@ -212,7 +246,7 @@ public class DrawPanel extends JPanel {
         _copyBufferBackup = new ArrayList<>(source);
         repaint();
     }
-    
+
     public void clearCopyBuffer() {
         _copyBuffer.clear();
     }
@@ -239,17 +273,11 @@ public class DrawPanel extends JPanel {
             public void mouseReleased(MouseEvent e) {
                 if (_state == PanelState.DRAW) {
                     drawShape(e);
-                }
-
-                else if (_state == PanelState.SELECT) {
+                } else if (_state == PanelState.SELECT) {
                     selectShapes(e);
-                }
-
-                else if (_state == PanelState.RESIZE) {
+                } else if (_state == PanelState.RESIZE) {
                     resizeShape(e);
-                }
-
-                else if (_state == PanelState.MOVE) {
+                } else if (_state == PanelState.MOVE) {
                     moveShape(e);
                 }
 
@@ -271,7 +299,6 @@ public class DrawPanel extends JPanel {
     }
 
     private void resizeShape(MouseEvent e) {
-
     }
 
     private void drawShape(MouseEvent e) {
