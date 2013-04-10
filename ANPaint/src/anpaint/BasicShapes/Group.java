@@ -17,6 +17,7 @@ public class Group extends BasicShape implements Serializable{
     public Group() {
         this._graphicSet = new ArrayList<>();
         this._pointSet = new ArrayList<>();
+        this._backupColor = _colour;
     }
 
     public Group(Group source) {
@@ -29,7 +30,7 @@ public class Group extends BasicShape implements Serializable{
         _weight = source._weight;
         _selected = source._selected;
         _graphicSet = source._graphicSet;
-        
+        this._backupColor = _colour;
         this._graphicSet = new ArrayList<>();
         n = source._graphicSet.size();
         BasicShape shape;
@@ -54,7 +55,6 @@ public class Group extends BasicShape implements Serializable{
             else {
                 shape = new Group((Group) source._graphicSet.get(i));
             }
-            
             this._graphicSet.add(shape);
         }
     }

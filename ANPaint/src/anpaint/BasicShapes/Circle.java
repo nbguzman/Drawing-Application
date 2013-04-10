@@ -26,6 +26,8 @@ public class Circle extends BasicShape implements Serializable{
         this._weight = source._weight;
         this._selected = source._selected;
         this._radius = source._radius;
+        
+        this._backupColor = _colour;
     }
     
     public Circle() {
@@ -40,6 +42,7 @@ public class Circle extends BasicShape implements Serializable{
         _style = style;
         _weight = weight;
         _selected = false;
+        this._backupColor = _colour;
     }
 
     @Override

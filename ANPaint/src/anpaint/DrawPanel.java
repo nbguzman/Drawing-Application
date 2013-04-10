@@ -344,6 +344,7 @@ public class DrawPanel extends JPanel {
 
             if (_shapeSet.get(i)._selected) {
                 _shapeSet.get(i).toggleSelected();
+                _shapeSet.get(i)._colour = _shapeSet.get(i)._backupColor;
             }
 
             for (int j = 0; j < pointSet.size(); j++) {
@@ -353,6 +354,8 @@ public class DrawPanel extends JPanel {
                 if (x < bigX && x > smallX && y < bigY && y > smallY) {
                     _shapeSet.get(i).toggleSelected();
                     System.out.println("Shape " + i + " Selected: " + _shapeSet.get(i)._selected);
+                    _shapeSet.get(i)._backupColor = _shapeSet.get(i)._colour;
+                    _shapeSet.get(i)._colour = Color.lightGray;
                     j = pointSet.size();
                 }
             }

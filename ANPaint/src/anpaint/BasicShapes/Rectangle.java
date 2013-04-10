@@ -23,6 +23,7 @@ public class Rectangle extends BasicShape implements Serializable{
         this._style = source._style;
         this._weight = source._weight;
         this._selected = source._selected;
+        this._backupColor = _colour;
     }
 
     public Rectangle(Point p1, Point p2, Color colour, boolean style, int weight) {
@@ -33,6 +34,7 @@ public class Rectangle extends BasicShape implements Serializable{
         _style = style;
         _weight = weight;
         _selected = false;
+        this._backupColor = _colour;
     }
 
     @Override
