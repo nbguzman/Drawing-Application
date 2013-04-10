@@ -135,9 +135,25 @@ public class DrawPanel extends JPanel {
 
     public void copy() {
         try {
+            clearCopyBuffer();
+            BasicShape tempBS = null;
             for (BasicShape bs : _shapeSet) {
                 if (bs.getSelected()) {
-                    _copyBuffer.add(bs);
+                    if (bs instanceof Circle) {
+                        tempBS = new Circle((Circle) bs);
+                    } else if (Line.class == bs.getClass()) {
+                        tempBS = new Line((Line) bs);
+                    } else if (Triangle.class == bs.getClass()) {
+                        tempBS = new Triangle((Triangle) bs);
+                    } else if (Rectangle.class == bs.getClass()) {
+                        tempBS = new Rectangle((Rectangle) bs);
+                    } else if (Group.class == bs.getClass()) {
+                        tempBS = new Group((Group) bs);
+                    }
+                    if (tempBS != null) {
+                        _copyBuffer.add(tempBS);
+                    }
+                    System.out.println(bs + "copied\n");
                 }
             }
         } catch (Exception ex) {
@@ -149,37 +165,10 @@ public class DrawPanel extends JPanel {
     public void paste() {
         try {
             ArrayList<BasicShape> temp = new ArrayList<>();
-            BasicShape tempBS = null;
             if (_copyBuffer != null) {
                 for (BasicShape bs : _copyBuffer) {
-                    /*
-                    if (bs instanceof Circle)
-                        tempBS = new Circle((Circle)bs);
-                    else if (bs instanceof Line)
-                        tempBS = new Line((Line)bs);
-                    else if (bs instanceof Triangle)
-                        tempBS = new Triangle((Triangle)bs);
-                    else if (bs instanceof Rectangle)
-                        tempBS = new Rectangle((Rectangle)bs);
-                    else if (bs instanceof Group)
-                        tempBS = new Group((Group)bs);
-                        * */
-                    
-                    if (bs instanceof Circle)
-                       tempBS = new Circle((Circle)bs);
-                    else if (Line.class == bs.getClass())
-                       tempBS = new Line((Line)bs);
-                    else if (Triangle.class == bs.getClass())
-                        tempBS = new Triangle((Triangle)bs);
-                    else if (Rectangle.class == bs.getClass())
-                        tempBS = new Rectangle((Rectangle)bs);
-                    else if (Group.class == bs.getClass())
-                        tempBS = new Group((Group)bs);
-                        
-                      if (tempBS != null) {
-                        tempBS.moveShape(-tempBS._pointSet.get(0).x, -tempBS._pointSet.get(0).y);
-                        temp.add(tempBS);
-                      }
+                    bs.moveShape(-bs._pointSet.get(0).x, -bs._pointSet.get(0).y);
+                    temp.add(bs);
                 }
                 _shapeSet.addAll(temp);
                 refreshCanvas();

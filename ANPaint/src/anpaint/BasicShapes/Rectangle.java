@@ -15,11 +15,11 @@ public class Rectangle extends BasicShape implements Serializable{
     }
     
     public Rectangle(Rectangle source) {
-        _colour = source._colour;
-        _pointSet = source._pointSet;
-        _style = source._style;
-        _weight = source._weight;
-        _selected = source._selected;
+        this._colour = source._colour;
+        this._pointSet = source._pointSet;
+        this._style = source._style;
+        this._weight = source._weight;
+        this._selected = source._selected;
     }
 
     public Rectangle(Point p1, Point p2, Color colour, boolean style, int weight) {

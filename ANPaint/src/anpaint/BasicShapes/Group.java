@@ -10,8 +10,8 @@ public class Group extends BasicShape implements Serializable{
     private ArrayList<BasicShape> _graphicSet;
 
     public Group() {
-        _graphicSet = new ArrayList<>();
-        _pointSet = new ArrayList<>();
+        this._graphicSet = new ArrayList<>();
+        this._pointSet = new ArrayList<>();
     }
 
     public Group(Group source) {

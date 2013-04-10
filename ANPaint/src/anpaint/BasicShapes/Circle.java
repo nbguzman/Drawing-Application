@@ -17,12 +17,12 @@ public class Circle extends BasicShape implements Serializable{
     public int _radius;
 
     public Circle(Circle source) {
-        _colour = source._colour;
-        _pointSet = source._pointSet;
-        _style = source._style;
-        _weight = source._weight;
-        _selected = source._selected;
-        _radius = source._radius;
+        this._colour = source._colour;
+        this._pointSet = source._pointSet;
+        this._style = source._style;
+        this._weight = source._weight;
+        this._selected = source._selected;
+        this._radius = source._radius;
     }
     
     public Circle() {
