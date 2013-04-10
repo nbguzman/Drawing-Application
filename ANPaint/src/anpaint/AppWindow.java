@@ -25,20 +25,12 @@ public class AppWindow extends JFrame {
     //a "history" of commands
     public Stack<Command> _cmds;
     public Stack<Command> _cmdsBackup;
-    public boolean _draw;
-    public boolean _select;
-    public boolean _move;
-    public boolean _resize;
 
     //singleton related methods
     private AppWindow() {
         _cmds = new Stack<>();
         _cmdsBackup = new Stack<>();
         _instance = this;
-        _draw = true;
-        _select = false;
-        _move = false;
-        _resize = false;
         buildFrame();
         buildMenu();
         buildToolbar();
@@ -264,15 +256,13 @@ public class AppWindow extends JFrame {
 
         _shapeTool = new JButton("Shape Tool");
         _shapeTool.setAlignmentX(Component.CENTER_ALIGNMENT);
+        _shapeTool.setMnemonic(KeyEvent.VK_D);
 
         //adding the action listener to know the shape tool is active
         _shapeTool.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                _draw = true;
-                _select = false;
-                _move = false;
-                _resize = false;
+                _drawPanel.changeState(PanelState.DRAW);
                 _drawPanel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
             }
         });
@@ -282,14 +272,12 @@ public class AppWindow extends JFrame {
 
         _moveTool = new JButton("Move Tool");
         _moveTool.setAlignmentX(Component.CENTER_ALIGNMENT);
+        _moveTool.setMnemonic(KeyEvent.VK_M);
 
         _moveTool.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                _draw = false;
-                _select = false;
-                _move = true;
-                _resize = false;
+                _drawPanel.changeState(PanelState.MOVE);
                 _drawPanel.setCursor(new Cursor(Cursor.MOVE_CURSOR));
             }
         });
@@ -299,14 +287,12 @@ public class AppWindow extends JFrame {
 
         _resizeTool = new JButton("Resize Tool");
         _resizeTool.setAlignmentX(Component.CENTER_ALIGNMENT);
+        _resizeTool.setMnemonic(KeyEvent.VK_R);
 
         _resizeTool.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                _draw = false;
-                _select = false;
-                _move = false;
-                _resize = true;
+                _drawPanel.changeState(PanelState.RESIZE);
                 _drawPanel.setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));
             }
         });
@@ -317,15 +303,13 @@ public class AppWindow extends JFrame {
         //selection Tool
         _selectionTool = new JButton("Selection Tool");
         _selectionTool.setAlignmentX(Component.CENTER_ALIGNMENT);
+        _selectionTool.setMnemonic(KeyEvent.VK_S);
 
         //adding the action listener to know the selection tool is active
         _selectionTool.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                _draw = false;
-                _select = true;
-                _move = false;
-                _resize = false;
+                _drawPanel.changeState(PanelState.SELECT);
                 _drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
         });
@@ -341,6 +325,7 @@ public class AppWindow extends JFrame {
 
         _group = new JButton("Group");
         _group.setAlignmentX(Component.CENTER_ALIGNMENT);
+        _group.setMnemonic(KeyEvent.VK_G);
 
         _group.addActionListener(new ActionListener(){
             @Override
@@ -354,6 +339,7 @@ public class AppWindow extends JFrame {
 
         _ungroup = new JButton("Ungroup");
         _ungroup.setAlignmentX(Component.CENTER_ALIGNMENT);
+        _ungroup.setMnemonic(KeyEvent.VK_U);
 
         _ungroup.addActionListener(new ActionListener(){
             @Override
@@ -367,17 +353,17 @@ public class AppWindow extends JFrame {
         //add the toolbar to the panel within the frame
         this.add(_toolBar, BorderLayout.WEST);
     }
-    
+
     protected void setCommands(Stack<Command> cmds)
     {
         _cmds = cmds;
     }
-    
+
     protected void setCommandsBackup(Stack<Command> bu)
     {
         _cmdsBackup = bu;
     }
-    
+
     protected void clearCommandsBackup()
     {
         _cmds.clear();

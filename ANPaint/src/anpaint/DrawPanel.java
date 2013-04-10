@@ -1,7 +1,6 @@
 package anpaint;
 
 import anpaint.BasicShapes.*;
-import anpaint.Commands.Command;
 import anpaint.Commands.DrawCommand;
 import anpaint.Creators.*;
 import java.awt.Color;
@@ -9,18 +8,12 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Stack;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -42,9 +35,11 @@ public class DrawPanel extends JPanel {
     private TriangleShapeCreator _triangleFactory;
     Graphics _g;
     private ArrayList<BasicShape> _backup;
+    private PanelState _state;
 
     public DrawPanel(AppWindow app) {
         _shapeSet = new ArrayList<>();
+        _state = PanelState.DRAW;
         //_window = AppWindow.getInstance();      /** not returning the unique instance **/
         _window = app;
         /**
@@ -185,20 +180,20 @@ public class DrawPanel extends JPanel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (_window._draw) {
+                if (_state == PanelState.DRAW) {
                     drawShape(e);
                 }
 
-                else if (_window._select) {
+                else if (_state == PanelState.SELECT) {
                     selectShapes(e);
                 }
 
-                else if (_window._resize) {
-
+                else if (_state == PanelState.RESIZE) {
+                    resizeShape(e);
                 }
 
-                else if (_window._move) {
-
+                else if (_state == PanelState.MOVE) {
+                    moveShape(e);
                 }
 
                 repaint();
@@ -207,6 +202,18 @@ public class DrawPanel extends JPanel {
     }
 
     private void moveShape(MouseEvent e) {
+        int n = _shapeSet.size();
+        int x = e.getX();
+        int y = e.getY();
+
+        for (int i = 0; i < n; i++) {
+            if (_shapeSet.get(i)._selected) {
+                _shapeSet.get(i).moveShape(x - _shapeSet.get(i)._pointSet.get(0).x, y - _shapeSet.get(i)._pointSet.get(0).y);
+            }
+        }
+    }
+
+    private void resizeShape(MouseEvent e) {
 
     }
 
@@ -304,5 +311,9 @@ public class DrawPanel extends JPanel {
                 }
             }
         }
+    }
+
+    public void changeState(PanelState state) {
+        _state = state;
     }
 }
