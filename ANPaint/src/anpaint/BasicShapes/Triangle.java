@@ -25,7 +25,7 @@ public class Triangle extends BasicShape implements Serializable{
         this._selected = source._selected;
         this._backupColor = _colour;
     }
-    
+
     public Triangle(Point p1, Point p2, Point p3, Color colour, boolean style, int weight) {
         _pointSet = new ArrayList<>();
         _pointSet.add(p1);
@@ -66,15 +66,45 @@ public class Triangle extends BasicShape implements Serializable{
     }
 
     @Override
-    public void resize() {
-        //unfinished implementation
+    public void resize(boolean increase) {
+        if (increase) {
+            if (_pointSet.get(1).y > _pointSet.get(0).y) {
+                _pointSet.get(1).x -= 5;
+                _pointSet.get(1).y += 10;
+                _pointSet.get(2).x += 5;
+                _pointSet.get(2).y += 10;
+            }
+
+            else {
+                _pointSet.get(1).x += 5;
+                _pointSet.get(1).y -= 10;
+                _pointSet.get(2).x -= 5;
+                _pointSet.get(2).y -= 10;
+            }
+        }
+
+        else {
+            if (_pointSet.get(1).y > _pointSet.get(0).y && _pointSet.get(1).y - _pointSet.get(0).y > 10) {
+                _pointSet.get(1).x += 5;
+                _pointSet.get(1).y -= 10;
+                _pointSet.get(2).x -= 5;
+                _pointSet.get(2).y -= 10;
+            }
+
+            else if (_pointSet.get(1).y < _pointSet.get(0).y && _pointSet.get(0).y - _pointSet.get(1).y > 10) {
+                _pointSet.get(1).x -= 5;
+                _pointSet.get(1).y += 10;
+                _pointSet.get(2).x += 5;
+                _pointSet.get(2).y += 10;
+            }
+        }
     }
 
     @Override
     public void toggleSelected() {
         _selected = !_selected;
     }
-    
+
     public String toString() {
         return "Triangle";
     }
