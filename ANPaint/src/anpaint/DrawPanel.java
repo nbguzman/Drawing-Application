@@ -141,32 +141,31 @@ public class DrawPanel extends JPanel {
             for (BasicShape bs : _shapeSet) {
                 if (bs.getSelected()) {
                     bs._colour = bs._backupColor;
-                    
+
                     if (bs instanceof Circle) {
                         tempBS = _circleFactory.cloneShape(bs);
-                    } 
+                    }
                     else if (bs instanceof Line) {
                         tempBS = _lineFactory.cloneShape(bs);
-                    } 
+                    }
                     else if (bs instanceof Triangle) {
                         tempBS = _triangleFactory.cloneShape(bs);
-                    } 
+                    }
                     else if (bs instanceof Rectangle) {
                         tempBS = _rectangleFactory.cloneShape(bs);
-                    } 
+                    }
                     else if (bs instanceof Group) {
                         for (int i = 0; i < bs.getChildren().size(); i++){
                             bs.getChildren().get(i)._colour = bs.getChildren().get(i)._backupColor;
                         }
 
                         tempBS = new Group((Group) bs);
-                                       
+
                     }
                     if (tempBS != null) {
                         tempBS.moveShape(-tempBS._pointSet.get(0).x, -tempBS._pointSet.get(0).y);
                         _copyBuffer.add(tempBS);
                     }
-                    System.out.println(bs + "copied");
                 }
             }
         } catch (Exception ex) {
@@ -272,8 +271,6 @@ public class DrawPanel extends JPanel {
                     drawShape(e);
                 } else if (_state == PanelState.SELECT) {
                     selectShapes(e);
-                } else if (_state == PanelState.RESIZE) {
-                    resizeShape(e);
                 } else if (_state == PanelState.MOVE) {
                     moveShape(e);
                 }
@@ -341,18 +338,18 @@ public class DrawPanel extends JPanel {
             bigY = e.getY();
             smallY = _point.y;
         }
-        
+
         for (int i = 0; i < _shapeSet.size(); i++) {
             ArrayList<Point> pointSet = _shapeSet.get(i)._pointSet;
 
             if (_shapeSet.get(i)._selected) {
                 _shapeSet.get(i).toggleSelected();
-                if (_shapeSet.get(i) instanceof Group) {                
+                if (_shapeSet.get(i) instanceof Group) {
                     for (int k = 0; k < _shapeSet.get(i).getChildren().size(); k++) {
                         _shapeSet.get(i).getChildren().get(k)._colour = _shapeSet.get(i).getChildren().get(k)._backupColor;
                     }
                 }
-                
+
                 else {
                     _shapeSet.get(i)._colour = _shapeSet.get(i)._backupColor;
                 }
@@ -364,18 +361,17 @@ public class DrawPanel extends JPanel {
 
                 if (x < bigX && x > smallX && y < bigY && y > smallY) {
                     _shapeSet.get(i).toggleSelected();
-                    System.out.println("Shape " + i + " Selected: " + _shapeSet.get(i)._selected);
-                    
+
                     if (_shapeSet.get(i) instanceof Group) {
                         for (int k = 0; k < _shapeSet.get(i).getChildren().size(); k++) {
                             _shapeSet.get(i).getChildren().get(k)._colour = Color.lightGray;
                         }
                     }
-                    
+
                     else {
                         _shapeSet.get(i)._colour = Color.lightGray;
                     }
-                    
+
                     j = pointSet.size();
                 }
             }
@@ -417,5 +413,25 @@ public class DrawPanel extends JPanel {
 
     public void changeState(PanelState state) {
         _state = state;
+    }
+
+    public void increaseShapeSize() {
+        int n = _shapeSet.size();
+
+        for (int i = 0; i < n; i++)
+            if (_shapeSet.get(i)._selected)
+                _shapeSet.get(i).resize(true);
+
+        repaint();
+    }
+
+    public void decreaseShapeSize() {
+        int n = _shapeSet.size();
+
+        for (int i = 0; i < n; i++)
+            if (_shapeSet.get(i)._selected)
+                _shapeSet.get(i).resize(false);
+
+        repaint();
     }
 }
