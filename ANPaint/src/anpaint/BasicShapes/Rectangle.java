@@ -13,6 +13,18 @@ public class Rectangle extends BasicShape implements Serializable{
     public Rectangle() {
         this(new Point(),new Point(),new Color(0),false,0);
     }
+    
+    public Rectangle(Rectangle source) {
+        this._colour = source._colour;
+        this._pointSet = new ArrayList<>();
+        int n = source._pointSet.size();
+        for (int i = 0; i < n; i++)
+            this._pointSet.add(new Point(source._pointSet.get(i)));
+        this._style = source._style;
+        this._weight = source._weight;
+        this._selected = source._selected;
+        this._backupColor = _colour;
+    }
 
     public Rectangle(Point p1, Point p2, Color colour, boolean style, int weight) {
         _pointSet = new ArrayList<>();
@@ -22,6 +34,7 @@ public class Rectangle extends BasicShape implements Serializable{
         _style = style;
         _weight = weight;
         _selected = false;
+        this._backupColor = _colour;
     }
 
     @Override

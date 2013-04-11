@@ -3,24 +3,20 @@ package anpaint;
 import anpaint.BasicShapes.*;
 import anpaint.Commands.Command;
 import anpaint.Commands.DrawCommand;
+import anpaint.Commands.MoveCommand;
 import anpaint.Creators.*;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Stack;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -42,9 +38,19 @@ public class DrawPanel extends JPanel {
     private TriangleShapeCreator _triangleFactory;
     Graphics _g;
     private ArrayList<BasicShape> _backup;
+    private ArrayList<BasicShape> _copyBuffer;
+    private ArrayList<BasicShape> _copyBufferBackup;
+    private PanelState _state;
+    java.awt.Rectangle selection_;
+    Point anchor;
 
     public DrawPanel(AppWindow app) {
         _shapeSet = new ArrayList<>();
+        _backup = new ArrayList<>();
+        _copyBuffer = new ArrayList<>();
+        _copyBufferBackup = new ArrayList<>();
+        _shapeSet = new ArrayList<>();
+        _state = PanelState.DRAW;
         //_window = AppWindow.getInstance();      /** not returning the unique instance **/
         _window = app;
         /**
@@ -64,6 +70,11 @@ public class DrawPanel extends JPanel {
 
         for (int i = 0; i < _shapeSet.size(); i++) {
             _shapeSet.get(i).draw(g);
+        }
+
+        if (selection_ != null) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.draw(selection_);
         }
     }
 
@@ -91,7 +102,6 @@ public class DrawPanel extends JPanel {
                 removeCmdHistory();
                 refreshCanvas();
             }
-
 
         } catch (Exception ex) {
             System.out.println("Loading error, StackTrace:");
@@ -133,9 +143,81 @@ public class DrawPanel extends JPanel {
     }
 
     public void copy() {
+        try {
+            clearCopyBuffer();
+            BasicShape tempBS = null;
+
+            for (BasicShape bs : _shapeSet) {
+                if (bs.getSelected()) {
+                    bs._colour = bs._backupColor;
+
+                    if (bs instanceof Circle) {
+                        tempBS = _circleFactory.cloneShape(bs);
+                    } else if (bs instanceof Line) {
+                        tempBS = _lineFactory.cloneShape(bs);
+                    } else if (bs instanceof Triangle) {
+                        tempBS = _triangleFactory.cloneShape(bs);
+                    } else if (bs instanceof Rectangle) {
+                        tempBS = _rectangleFactory.cloneShape(bs);
+                    } else if (bs instanceof Group) {
+                        for (int i = 0; i < bs.getChildren().size(); i++) {
+                            bs.getChildren().get(i)._colour = bs.getChildren().get(i)._backupColor;
+                        }
+
+                        tempBS = new Group((Group) bs);
+
+                    }
+                    if (tempBS != null) {
+                        tempBS.moveShape(-tempBS._pointSet.get(0).x, -tempBS._pointSet.get(0).y);
+                        _copyBuffer.add(tempBS);
+                        _copyBufferBackup = _copyBuffer;
+                    }
+                    System.out.println(bs + "copied");
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println("Copying error, StackTrace:");
+            ex.printStackTrace();
+        }
     }
 
     public void paste() {
+        try {
+            if (_copyBuffer != null) {
+                _shapeSet.addAll(_copyBuffer);
+                refreshCanvas();
+            }
+        } catch (Exception ex) {
+            System.out.println("Pasting error, StackTrace:");
+            ex.printStackTrace();
+        }
+    }
+    
+    public void undoPaste() {
+        try {
+            if (_shapeSet != null && _copyBuffer != null) {
+                _shapeSet.removeAll(_copyBuffer);
+                _copyBufferBackup = _copyBuffer;
+            }
+            refreshCanvas();
+            
+        } catch (Exception ex) {
+            System.out.println("Undoing paste error, StackTrace:");
+            ex.printStackTrace();
+        }
+    }
+
+    public void redoPaste() {
+        try {
+            if (_copyBufferBackup != null) {
+                _shapeSet.addAll(_copyBufferBackup);
+                _copyBuffer = _copyBufferBackup;
+            }
+            refreshCanvas();
+        } catch (Exception ex) {
+            System.out.println("Redoing paste error, StackTrace:");
+            ex.printStackTrace();
+        }
     }
 
     //remove the last drawing done
@@ -147,6 +229,10 @@ public class DrawPanel extends JPanel {
         }
     }
 
+    //undo last move
+    public void undoMove() {
+    }
+    
     public ArrayList<BasicShape> getCurrentSet() {
         return _shapeSet;
     }
@@ -165,6 +251,28 @@ public class DrawPanel extends JPanel {
         repaint();
     }
 
+    public ArrayList<BasicShape> getCBuffer() {
+        return _copyBuffer;
+    }
+
+    public void setCBuffer(ArrayList<BasicShape> source) {
+        _copyBuffer = new ArrayList<>(source);
+        repaint();
+    }
+
+    public ArrayList<BasicShape> getCBufferBackup() {
+        return _copyBufferBackup;
+    }
+
+    public void setCBufferBackup(ArrayList<BasicShape> source) {
+        _copyBufferBackup = new ArrayList<>(source);
+        repaint();
+    }
+
+    public void clearCopyBuffer() {
+        _copyBuffer.clear();
+    }
+
     public void refreshCanvas() {
         repaint();
     }
@@ -175,6 +283,8 @@ public class DrawPanel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 _point = new Point(e.getX(), e.getY());
+                anchor = e.getPoint();
+                selection_ = new java.awt.Rectangle(anchor);
             }
         });
 
@@ -185,14 +295,55 @@ public class DrawPanel extends JPanel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (_window._draw) {
+                if (_state == PanelState.DRAW) {
                     drawShape(e);
-                } else {
+                } else if (_state == PanelState.SELECT) {
                     selectShapes(e);
+                } else if (_state == PanelState.RESIZE) {
+                    resizeShape(e);
+                } else if (_state == PanelState.MOVE) {
+                    moveShape(e);
+
                 }
+                selection_ = null;
                 repaint();
+
             }
         });
+
+        this.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (_state == PanelState.SELECT) {
+                    selection_.setBounds((int) Math.min(anchor.x, e.getX()), (int) Math.min(anchor.y, e.getY()),
+                            (int) Math.abs(e.getX() - anchor.x), (int) Math.abs(e.getY() - anchor.y));
+                    repaint();
+                }
+            }
+        });
+
+    }
+
+    private void moveShape(MouseEvent e) {
+        int n = _shapeSet.size();
+        int x = e.getX();
+        int y = e.getY();
+
+        for (int i = 0; i < n; i++) {
+            if (_shapeSet.get(i)._selected) {
+                _shapeSet.get(i).moveShape(x - _shapeSet.get(i)._pointSet.get(0).x, y - _shapeSet.get(i)._pointSet.get(0).y);
+            }
+        }
+        
+        _window.addCommand(new MoveCommand((DrawPanel) e.getComponent()));
+        _window.clearBackup();
+    }
+
+    private void resizeShape(MouseEvent e) {
+    }
+
+    public void addCommand(Command cmd) {
+        _window.addCommand(cmd);
     }
 
     private void drawShape(MouseEvent e) {
@@ -244,6 +395,13 @@ public class DrawPanel extends JPanel {
 
             if (_shapeSet.get(i)._selected) {
                 _shapeSet.get(i).toggleSelected();
+                if (_shapeSet.get(i) instanceof Group) {
+                    for (int k = 0; k < _shapeSet.get(i).getChildren().size(); k++) {
+                        _shapeSet.get(i).getChildren().get(k)._colour = _shapeSet.get(i).getChildren().get(k)._backupColor;
+                    }
+                } else {
+                    _shapeSet.get(i)._colour = _shapeSet.get(i)._backupColor;
+                }
             }
 
             for (int j = 0; j < pointSet.size(); j++) {
@@ -253,6 +411,15 @@ public class DrawPanel extends JPanel {
                 if (x < bigX && x > smallX && y < bigY && y > smallY) {
                     _shapeSet.get(i).toggleSelected();
                     System.out.println("Shape " + i + " Selected: " + _shapeSet.get(i)._selected);
+
+                    if (_shapeSet.get(i) instanceof Group) {
+                        for (int k = 0; k < _shapeSet.get(i).getChildren().size(); k++) {
+                            _shapeSet.get(i).getChildren().get(k)._colour = Color.lightGray;
+                        }
+                    } else {
+                        _shapeSet.get(i)._colour = Color.lightGray;
+                    }
+
                     j = pointSet.size();
                 }
             }
@@ -267,6 +434,7 @@ public class DrawPanel extends JPanel {
         for (int i = 0; i < n; i++) {
             if (_shapeSet.get(i - removed)._selected) {
                 _shapeSet.get(i - removed).toggleSelected();
+                _shapeSet.get(i - removed)._colour = _shapeSet.get(i - removed)._backupColor;
                 group.add(_shapeSet.get(i - removed));
                 _shapeSet.remove(i - removed);
                 removed++;
@@ -289,5 +457,9 @@ public class DrawPanel extends JPanel {
                 }
             }
         }
+    }
+
+    public void changeState(PanelState state) {
+        _state = state;
     }
 }

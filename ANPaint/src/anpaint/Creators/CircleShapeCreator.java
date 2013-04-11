@@ -36,4 +36,10 @@ public class CircleShapeCreator extends ShapeCreator {
         int radius = (int) Math.sqrt(Math.pow(point.x - e.getX(), 2) + Math.pow(point.y - e.getY(), 2));
         return new Circle(new Point(point.x - radius, point.y - radius), radius, colour, window.getLineType(), window.getWeight());
     }
+
+    @Override
+    public BasicShape cloneShape(BasicShape src) {
+        Circle circle = new Circle((Circle) src);
+        return circle;
+    }
 }

@@ -33,6 +33,12 @@ public class RectangleShapeCreator extends ShapeCreator {
                 break;
         }
 
-        return new Rectangle(point, new Point(e.getX(), e.getY()), colour , window.getLineType(), window.getWeight());
+        return new Rectangle(point, new Point(e.getX(), e.getY()), colour, window.getLineType(), window.getWeight());
+    }
+
+    @Override
+    public BasicShape cloneShape(BasicShape src) {
+        Rectangle rectangle = new Rectangle((Rectangle) src);
+        return rectangle;
     }
 }

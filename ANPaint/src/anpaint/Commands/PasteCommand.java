@@ -1,5 +1,9 @@
 package anpaint.Commands;
 
+import anpaint.BasicShapes.BasicShape;
+import anpaint.DrawPanel;
+import java.util.ArrayList;
+
 /**
  * The PasteCommand class will handle the pasting of an object or group of
  * objects. Will try to implement pasting using the shortcut "Ctrl+v". It should
@@ -12,19 +16,25 @@ package anpaint.Commands;
  * This is part of the Command Pattern
  */
 public class PasteCommand implements Command{
-    public PasteCommand() {
-        
+    DrawPanel __drawPanel;
+    
+    public PasteCommand(DrawPanel dp) {
+        __drawPanel = dp;
     }
     
+    @Override
     public void execute() {
-        
+        __drawPanel.paste(); 
+        __drawPanel.addCommand(this);
     }
     
+    @Override
     public void undo() {
-        
+        __drawPanel.undoPaste();
     }
     
+    @Override
     public void redo() {
-        
+        __drawPanel.redoPaste();
     }
 }

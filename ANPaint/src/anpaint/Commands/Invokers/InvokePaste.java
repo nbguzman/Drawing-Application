@@ -1,5 +1,9 @@
 package anpaint.Commands.Invokers;
 
+import anpaint.Commands.Command;
+import anpaint.Commands.CopyCommand;
+import anpaint.Commands.PasteCommand;
+import anpaint.DrawPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,10 +12,22 @@ import java.awt.event.ActionListener;
  * PasteCommand when an item has been clicked on the application
  */
 public class InvokePaste implements ActionListener {
+    Command cmd;
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public InvokePaste(DrawPanel dp) {
+       cmd = new PasteCommand(dp);
     }
     
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try
+        {
+           cmd.execute();
+        }
+        catch(Exception ex)
+        {
+            System.out.println("InvokePaste error, StackTrace:");
+            ex.printStackTrace();
+        }
+    }
 }
