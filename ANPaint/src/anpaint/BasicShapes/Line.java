@@ -25,7 +25,7 @@ public class Line extends BasicShape implements Serializable{
         this._selected = source._selected;
         this._backupColor = _colour;
     }
-    
+
     public Line(Point p1, Point p2, Color colour, boolean style, int weight) {
         _pointSet = new ArrayList<>();
         _pointSet.add(p1);
@@ -91,15 +91,92 @@ public class Line extends BasicShape implements Serializable{
     }
 
     @Override
-    public void resize() {
-        //unfinished implementation
+    public void resize(boolean increase) {
+        int dx = _pointSet.get(1).x - _pointSet.get(0).x;
+        int dy = _pointSet.get(1).y - _pointSet.get(0).y;
+
+        if (increase) {
+            if (dx > 0 && dy > 0) {
+                _pointSet.get(1).x += 10;
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (dx > 0 && dy < 0) {
+                _pointSet.get(1).x += 10;
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (dx < 0 && dy > 0) {
+                _pointSet.get(1).x -= 10;
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (dx < 0 && dy < 0) {
+                _pointSet.get(1).x -= 10;
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (dx == 0 && dy < 0) {
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (dx == 0 && dy > 0) {
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (dy == 0 && dx < 0) {
+                _pointSet.get(1).x -= 10;
+            }
+
+            else if (dy == 0 && dx > 0) {
+                _pointSet.get(1).x += 10;
+            }
+        }
+
+        else {
+            if (dx > 0 && dy > 0 && dx > 10 && dy > 10) {
+                _pointSet.get(1).x -= 10;
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (dx > 0 && dy < 0 && dx > 10 && dy < -10) {
+                _pointSet.get(1).x -= 10;
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (dx < 0 && dy > 0 && dx < -10 && dy > 10) {
+                _pointSet.get(1).x += 10;
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (dx < 0 && dy < 0 && dx < -10 && dy < -10) {
+                _pointSet.get(1).x += 10;
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (dx == 0 && dy < 0 && dy < -10) {
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (dx == 0 && dy > 0 && dy > 10) {
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (dy == 0 && dx < 0 && dx < -10) {
+                _pointSet.get(1).x += 10;
+            }
+
+            else if (dy == 0 && dx > 0 && dx > 10) {
+                _pointSet.get(1).x -= 10;
+            }
+        }
     }
 
     @Override
     public void toggleSelected() {
         _selected = !_selected;
     }
-    
+
     public String toString() {
         return "Line";
     }

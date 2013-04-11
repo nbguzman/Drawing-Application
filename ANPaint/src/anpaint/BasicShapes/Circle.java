@@ -26,10 +26,10 @@ public class Circle extends BasicShape implements Serializable{
         this._weight = source._weight;
         this._selected = source._selected;
         this._radius = source._radius;
-        
+
         this._backupColor = _colour;
     }
-    
+
     public Circle() {
         this(new Point(),0,new Color(0),false,0);
     }
@@ -71,15 +71,20 @@ public class Circle extends BasicShape implements Serializable{
     }
 
     @Override
-    public void resize() {
-        //unfinished implementation
+    public void resize(boolean increase) {
+        if (increase)
+            _radius += 10;
+        else if (_radius > 10)
+            _radius -= 10;
+        else
+            _radius = 1;
     }
 
     @Override
     public void toggleSelected() {
         _selected = !_selected;
     }
-    
+
     public String toString() {
         return "Cicle";
     }

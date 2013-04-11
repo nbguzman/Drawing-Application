@@ -38,27 +38,27 @@ public class Group extends BasicShape implements Serializable{
         CircleShapeCreator _circleFactory = new CircleShapeCreator();
         LineShapeCreator _lineFactory = new LineShapeCreator();
         TriangleShapeCreator _triangleFactory = new TriangleShapeCreator();
-        
+
         for (int i = 0; i < n; i++) {
             if (source._graphicSet.get(i) instanceof Circle) {
                 shape = _circleFactory.cloneShape(source._graphicSet.get(i));
-            } 
+            }
             else if (source._graphicSet.get(i) instanceof Line) {
                 shape = _lineFactory.cloneShape(source._graphicSet.get(i));
-            } 
+            }
             else if (source._graphicSet.get(i) instanceof Triangle) {
                 shape = _triangleFactory.cloneShape(source._graphicSet.get(i));
-            } 
+            }
             else if (source._graphicSet.get(i) instanceof Rectangle) {
                 shape = _rectangleFactory.cloneShape(source._graphicSet.get(i));
-            } 
+            }
             else {
                 shape = new Group((Group) source._graphicSet.get(i));
             }
             this._graphicSet.add(shape);
         }
     }
-    
+
     @Override
     public void add(BasicShape shape) {
         _graphicSet.add(shape);
@@ -90,9 +90,9 @@ public class Group extends BasicShape implements Serializable{
     }
 
     @Override
-    public void resize() {
+    public void resize(boolean increase) {
         for (int i = 0; i < _graphicSet.size(); i++)
-            _graphicSet.get(i).resize();
+            _graphicSet.get(i).resize(increase);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class Group extends BasicShape implements Serializable{
         for (int i =0; i < _graphicSet.size(); i++)
             _graphicSet.get(i).toggleSelected();
     }
-    
+
     public String toString() {
         return "Group";
     }
