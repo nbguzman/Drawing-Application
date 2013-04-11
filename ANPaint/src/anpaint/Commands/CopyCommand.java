@@ -22,8 +22,9 @@ public class CopyCommand implements Command{
         __drawPanel.copy();
     }
     
+    // Will not be implemented - cannot undo a Copy (must have pasted first)
     public void undo() {
-        __drawPanel.clearCopyBuffer();
+        throw new UnsupportedOperationException("Cannot undo a copy command");
     }
     
     // Will not be implemented - cannot redo a Copy

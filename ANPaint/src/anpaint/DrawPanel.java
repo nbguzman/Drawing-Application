@@ -1,13 +1,14 @@
 package anpaint;
 
 import anpaint.BasicShapes.*;
+import anpaint.Commands.Command;
 import anpaint.Commands.DrawCommand;
+import anpaint.Commands.MoveCommand;
 import anpaint.Creators.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -149,30 +150,27 @@ public class DrawPanel extends JPanel {
             for (BasicShape bs : _shapeSet) {
                 if (bs.getSelected()) {
                     bs._colour = bs._backupColor;
-                    
+
                     if (bs instanceof Circle) {
                         tempBS = _circleFactory.cloneShape(bs);
-                    } 
-                    else if (bs instanceof Line) {
+                    } else if (bs instanceof Line) {
                         tempBS = _lineFactory.cloneShape(bs);
-                    } 
-                    else if (bs instanceof Triangle) {
+                    } else if (bs instanceof Triangle) {
                         tempBS = _triangleFactory.cloneShape(bs);
-                    } 
-                    else if (bs instanceof Rectangle) {
+                    } else if (bs instanceof Rectangle) {
                         tempBS = _rectangleFactory.cloneShape(bs);
-                    } 
-                    else if (bs instanceof Group) {
-                        for (int i = 0; i < bs.getChildren().size(); i++){
+                    } else if (bs instanceof Group) {
+                        for (int i = 0; i < bs.getChildren().size(); i++) {
                             bs.getChildren().get(i)._colour = bs.getChildren().get(i)._backupColor;
                         }
 
                         tempBS = new Group((Group) bs);
-                                       
+
                     }
                     if (tempBS != null) {
                         tempBS.moveShape(-tempBS._pointSet.get(0).x, -tempBS._pointSet.get(0).y);
                         _copyBuffer.add(tempBS);
+                        _copyBufferBackup = _copyBuffer;
                     }
                     System.out.println(bs + "copied");
                 }
@@ -194,15 +192,30 @@ public class DrawPanel extends JPanel {
             ex.printStackTrace();
         }
     }
-
+    
     public void undoPaste() {
         try {
             if (_shapeSet != null && _copyBuffer != null) {
                 _shapeSet.removeAll(_copyBuffer);
+                _copyBufferBackup = _copyBuffer;
+            }
+            refreshCanvas();
+            
+        } catch (Exception ex) {
+            System.out.println("Undoing paste error, StackTrace:");
+            ex.printStackTrace();
+        }
+    }
+
+    public void redoPaste() {
+        try {
+            if (_copyBufferBackup != null) {
+                _shapeSet.addAll(_copyBufferBackup);
+                _copyBuffer = _copyBufferBackup;
             }
             refreshCanvas();
         } catch (Exception ex) {
-            System.out.println("Undoing paste error, StackTrace:");
+            System.out.println("Redoing paste error, StackTrace:");
             ex.printStackTrace();
         }
     }
@@ -216,6 +229,10 @@ public class DrawPanel extends JPanel {
         }
     }
 
+    //undo last move
+    public void undoMove() {
+    }
+    
     public ArrayList<BasicShape> getCurrentSet() {
         return _shapeSet;
     }
@@ -286,7 +303,7 @@ public class DrawPanel extends JPanel {
                     resizeShape(e);
                 } else if (_state == PanelState.MOVE) {
                     moveShape(e);
-                    
+
                 }
                 selection_ = null;
                 repaint();
@@ -317,9 +334,16 @@ public class DrawPanel extends JPanel {
                 _shapeSet.get(i).moveShape(x - _shapeSet.get(i)._pointSet.get(0).x, y - _shapeSet.get(i)._pointSet.get(0).y);
             }
         }
+        
+        _window.addCommand(new MoveCommand((DrawPanel) e.getComponent()));
+        _window.clearBackup();
     }
 
     private void resizeShape(MouseEvent e) {
+    }
+
+    public void addCommand(Command cmd) {
+        _window.addCommand(cmd);
     }
 
     private void drawShape(MouseEvent e) {
@@ -365,19 +389,17 @@ public class DrawPanel extends JPanel {
             bigY = e.getY();
             smallY = _point.y;
         }
-        
+
         for (int i = 0; i < _shapeSet.size(); i++) {
             ArrayList<Point> pointSet = _shapeSet.get(i)._pointSet;
 
             if (_shapeSet.get(i)._selected) {
                 _shapeSet.get(i).toggleSelected();
-                if (_shapeSet.get(i) instanceof Group) {                
+                if (_shapeSet.get(i) instanceof Group) {
                     for (int k = 0; k < _shapeSet.get(i).getChildren().size(); k++) {
                         _shapeSet.get(i).getChildren().get(k)._colour = _shapeSet.get(i).getChildren().get(k)._backupColor;
                     }
-                }
-                
-                else {
+                } else {
                     _shapeSet.get(i)._colour = _shapeSet.get(i)._backupColor;
                 }
             }
@@ -389,17 +411,15 @@ public class DrawPanel extends JPanel {
                 if (x < bigX && x > smallX && y < bigY && y > smallY) {
                     _shapeSet.get(i).toggleSelected();
                     System.out.println("Shape " + i + " Selected: " + _shapeSet.get(i)._selected);
-                    
+
                     if (_shapeSet.get(i) instanceof Group) {
                         for (int k = 0; k < _shapeSet.get(i).getChildren().size(); k++) {
                             _shapeSet.get(i).getChildren().get(k)._colour = Color.lightGray;
                         }
-                    }
-                    
-                    else {
+                    } else {
                         _shapeSet.get(i)._colour = Color.lightGray;
                     }
-                    
+
                     j = pointSet.size();
                 }
             }

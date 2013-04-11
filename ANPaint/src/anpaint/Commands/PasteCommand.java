@@ -24,7 +24,8 @@ public class PasteCommand implements Command{
     
     @Override
     public void execute() {
-        __drawPanel.paste();
+        __drawPanel.paste(); 
+        __drawPanel.addCommand(this);
     }
     
     @Override
@@ -34,5 +35,6 @@ public class PasteCommand implements Command{
     
     @Override
     public void redo() {
+        __drawPanel.redoPaste();
     }
 }
