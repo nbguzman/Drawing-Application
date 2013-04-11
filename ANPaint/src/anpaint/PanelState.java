@@ -4,6 +4,5 @@ package anpaint;
 public enum PanelState {
     DRAW,
     SELECT,
-    MOVE,
-    RESIZE
+    MOVE
 }

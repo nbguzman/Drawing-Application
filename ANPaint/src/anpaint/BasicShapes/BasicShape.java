@@ -15,17 +15,16 @@ public abstract class BasicShape extends Object implements Serializable{
     public abstract void add(BasicShape shape);
     public abstract void remove(BasicShape shape);
     public abstract ArrayList<BasicShape> getChildren();
-    //abstract void paint(Graphics g);
     public abstract void moveShape(int dx, int dy);
     public abstract void draw(Graphics g);
     public String toString() {
         String rc = "";
-        
-        rc += "color:" + _colour.toString() + ";" 
+
+        rc += "color:" + _colour.toString() + ";"
            + "style:" + _style + ";"
            + "weight:" + _weight + ";"
            + "points:";
-        
+
         for (Point p: _pointSet) {
             rc += p.x + "-" + p.y + ",";
         }
@@ -33,9 +32,9 @@ public abstract class BasicShape extends Object implements Serializable{
         rc+="~";
         return rc;
     }
-    public abstract void resize();
+    public abstract void resize(boolean increase);
     public abstract void toggleSelected();
-    
+
     public boolean getSelected() {
         return _selected;
     }

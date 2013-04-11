@@ -201,7 +201,8 @@ public class AppWindow extends JFrame {
         JToolBar _toolBar;
         JButton _shapeTool;
         JButton _moveTool;
-        JButton _resizeTool;
+        JButton _increaseSize;
+        JButton _decreaseSize;
         JButton _group;
         JButton _ungroup;
         JButton _selectionTool;
@@ -277,19 +278,32 @@ public class AppWindow extends JFrame {
         _toolBar.add(_moveTool);
         _toolBar.add(Box.createRigidArea(new Dimension(0,5)));
 
-        _resizeTool = new JButton("Resize Tool");
-        _resizeTool.setAlignmentX(Component.CENTER_ALIGNMENT);
-        _resizeTool.setMnemonic(KeyEvent.VK_R);
+        _increaseSize = new JButton("Increase");
+        _increaseSize.setAlignmentX(Component.CENTER_ALIGNMENT);
+        _increaseSize.setMnemonic(KeyEvent.VK_PERIOD);
 
-        _resizeTool.addActionListener(new ActionListener(){
+        _increaseSize.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                _drawPanel.changeState(PanelState.RESIZE);
-                _drawPanel.setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));
+                _drawPanel.increaseShapeSize();
             }
         });
 
-        _toolBar.add(_resizeTool);
+        _toolBar.add(_increaseSize);
+        _toolBar.add(Box.createRigidArea(new Dimension(0,5)));
+
+        _decreaseSize = new JButton("Decrease");
+        _decreaseSize.setAlignmentX(Component.CENTER_ALIGNMENT);
+        _decreaseSize.setMnemonic(KeyEvent.VK_COMMA);
+
+        _decreaseSize.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                _drawPanel.decreaseShapeSize();
+            }
+        });
+
+        _toolBar.add(_decreaseSize);
         _toolBar.add(Box.createRigidArea(new Dimension(0,5)));
 
         //selection Tool
