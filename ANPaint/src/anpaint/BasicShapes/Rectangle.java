@@ -13,7 +13,7 @@ public class Rectangle extends BasicShape implements Serializable{
     public Rectangle() {
         this(new Point(),new Point(),new Color(0),false,0);
     }
-    
+
     public Rectangle(Rectangle source) {
         this._colour = source._colour;
         this._pointSet = new ArrayList<>();
@@ -83,15 +83,60 @@ public class Rectangle extends BasicShape implements Serializable{
     }
 
     @Override
-    public void resize() {
-        //unfinished implementation
+    public void resize(boolean increase) {
+        int width = _pointSet.get(1).x - _pointSet.get(0).x;
+        int height = _pointSet.get(1).y - _pointSet.get(0).y;
+
+        if (increase) {
+            if (width >= 0 && height >= 0) {
+                _pointSet.get(1).x += 10;
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (width < 0 && height < 0) {
+                _pointSet.get(1).x -= 10;
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (width < 0 && height >= 0) {
+                _pointSet.get(1).x -= 10;
+                _pointSet.get(1).y += 10;
+            }
+
+            else {
+                _pointSet.get(1).x += 10;
+                _pointSet.get(1).y -= 10;
+            }
+        }
+
+        else {
+            if (width >= 0 && height >= 0 && _pointSet.get(1).x - _pointSet.get(0).x > 10 && _pointSet.get(1).y - _pointSet.get(0).y > 10) {
+                _pointSet.get(1).x -= 10;
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (width < 0 && height < 0 && _pointSet.get(0).x - _pointSet.get(1).x > 10 && _pointSet.get(0).y - _pointSet.get(1).y > 10) {
+                _pointSet.get(1).x += 10;
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (width < 0 && height >= 0 && _pointSet.get(0).x - _pointSet.get(1).x > 10 && _pointSet.get(1).y - _pointSet.get(0).y > 10) {
+                _pointSet.get(1).x += 10;
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (_pointSet.get(1).x - _pointSet.get(0).x > 10 && _pointSet.get(0).y - _pointSet.get(1).y > 10) {
+                _pointSet.get(1).x -= 10;
+                _pointSet.get(1).y += 10;
+            }
+        }
     }
 
     @Override
     public void toggleSelected() {
         _selected = !_selected;
     }
-    
+
     public String toString() {
         return "Rectangle";
     }
