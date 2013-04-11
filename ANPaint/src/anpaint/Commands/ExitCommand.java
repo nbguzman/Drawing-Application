@@ -31,4 +31,8 @@ public class ExitCommand implements Command {
     public void redo() {
         throw new UnsupportedOperationException("Cannot redo an exit command");
     }
+    
+     public String toString() {
+        return "exit command";
+    }
 }

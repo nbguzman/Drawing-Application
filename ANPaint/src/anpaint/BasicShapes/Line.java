@@ -92,14 +92,83 @@ public class Line extends BasicShape implements Serializable{
 
     @Override
     public void resize(boolean increase) {
+        int dx = _pointSet.get(1).x - _pointSet.get(0).x;
+        int dy = _pointSet.get(1).y - _pointSet.get(0).y;
+
         if (increase) {
-            _pointSet.get(1).x += 10;
-            _pointSet.get(1).y += 10;
+            if (dx > 0 && dy > 0) {
+                _pointSet.get(1).x += 10;
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (dx > 0 && dy < 0) {
+                _pointSet.get(1).x += 10;
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (dx < 0 && dy > 0) {
+                _pointSet.get(1).x -= 10;
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (dx < 0 && dy < 0) {
+                _pointSet.get(1).x -= 10;
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (dx == 0 && dy < 0) {
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (dx == 0 && dy > 0) {
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (dy == 0 && dx < 0) {
+                _pointSet.get(1).x -= 10;
+            }
+
+            else if (dy == 0 && dx > 0) {
+                _pointSet.get(1).x += 10;
+            }
         }
 
         else {
-            _pointSet.get(1).x -= 10;
-            _pointSet.get(1).y -= 10;
+            if (dx > 0 && dy > 0 && dx > 10 && dy > 10) {
+                _pointSet.get(1).x -= 10;
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (dx > 0 && dy < 0 && dx > 10 && dy < -10) {
+                _pointSet.get(1).x -= 10;
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (dx < 0 && dy > 0 && dx < -10 && dy > 10) {
+                _pointSet.get(1).x += 10;
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (dx < 0 && dy < 0 && dx < -10 && dy < -10) {
+                _pointSet.get(1).x += 10;
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (dx == 0 && dy < 0 && dy < -10) {
+                _pointSet.get(1).y += 10;
+            }
+
+            else if (dx == 0 && dy > 0 && dy > 10) {
+                _pointSet.get(1).y -= 10;
+            }
+
+            else if (dy == 0 && dx < 0 && dx < -10) {
+                _pointSet.get(1).x += 10;
+            }
+
+            else if (dy == 0 && dx > 0 && dx > 10) {
+                _pointSet.get(1).x -= 10;
+            }
         }
     }
 

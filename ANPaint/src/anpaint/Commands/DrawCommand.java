@@ -19,9 +19,11 @@ public class DrawCommand implements Command {
     //set the drawpanel's backupset to what it currently is
     public DrawCommand(DrawPanel dp) {
         __drawPanel = dp;
-        _current = new ArrayList<>(__drawPanel.getCurrentSet());
+        _current = __drawPanel.copySet(__drawPanel.getCurrentSet());//new ArrayList<>(__drawPanel.getCurrentSet());
+       // _current = new ArrayList<>(__drawPanel.getCurrentSet());
         __drawPanel.setBackupSet(_current); 
-        _backup = new ArrayList<>(__drawPanel.getBackupSet());
+        _backup =  __drawPanel.copySet(__drawPanel.getBackupSet());//new ArrayList<>(__drawPanel.getBackupSet());
+        //_backup = new ArrayList<>(__drawPanel.getBackupSet());
     }
     
     //set the current set to what it currently is, essentially repainting it
@@ -41,8 +43,13 @@ public class DrawCommand implements Command {
     //and then set the current set of drawpanel to the backup set
     @Override
     public void redo() {
-        _current = __drawPanel.getBackupSet();
+        _current =  __drawPanel.copySet(__drawPanel.getBackupSet());
+        //_current = __drawPanel.getBackupSet();
         __drawPanel.setCurrentSet(_backup);
         __drawPanel.setBackupSet(_current);
+    }
+    
+     public String toString() {
+        return "draw command";
     }
 }

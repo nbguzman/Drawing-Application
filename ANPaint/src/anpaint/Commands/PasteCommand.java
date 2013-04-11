@@ -37,4 +37,8 @@ public class PasteCommand implements Command{
     public void redo() {
         __drawPanel.redoPaste();
     }
+    
+     public String toString() {
+        return "paste command";
+    }
 }

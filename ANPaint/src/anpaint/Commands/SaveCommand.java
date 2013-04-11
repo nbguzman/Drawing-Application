@@ -33,4 +33,8 @@ public class SaveCommand implements Command {
     public void redo() {
         throw new UnsupportedOperationException("Cannot redo a save command");
     }
+    
+     public String toString() {
+        return "save command";
+    }
 }
