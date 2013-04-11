@@ -4,6 +4,7 @@ import anpaint.BasicShapes.*;
 import anpaint.Commands.Command;
 import anpaint.Commands.DrawCommand;
 import anpaint.Commands.MoveCommand;
+import anpaint.Commands.ResizeCommand;
 import anpaint.Creators.*;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -526,25 +527,25 @@ public class DrawPanel extends JPanel {
 
     public void increaseShapeSize() {
         int n = _shapeSet.size();
-
+        setBackupSet(_shapeSet);
         for (int i = 0; i < n; i++) {
             if (_shapeSet.get(i)._selected) {
                 _shapeSet.get(i).resize(true);
             }
         }
-
+        _window.addCommand(new ResizeCommand(this));
         repaint();
     }
 
     public void decreaseShapeSize() {
         int n = _shapeSet.size();
-
+        setBackupSet(_shapeSet);
         for (int i = 0; i < n; i++) {
             if (_shapeSet.get(i)._selected) {
                 _shapeSet.get(i).resize(false);
             }
         }
-
+        _window.addCommand(new ResizeCommand(this));
         repaint();
     }
 }
