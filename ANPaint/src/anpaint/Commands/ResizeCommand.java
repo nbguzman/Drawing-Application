@@ -10,14 +10,14 @@ import java.util.ArrayList;
  * 
  * This is part of the Command Pattern
  */
-public class MoveCommand implements Command {
+public class ResizeCommand implements Command {
     DrawPanel __drawPanel;
     ArrayList<BasicShape> _current;
     ArrayList<BasicShape> _backup;
     
     //initialize the DrawPanel and the current ShapeSet that drawpanel has
     //set the drawpanel's backupset to what it currently is
-    public MoveCommand(DrawPanel dp) {
+    public ResizeCommand(DrawPanel dp) {
         __drawPanel = dp;
         _current = __drawPanel.copySet(__drawPanel.getCurrentSet());//new ArrayList<>(__drawPanel.getCurrentSet());
         //__drawPanel.setBackupSet(_current); 

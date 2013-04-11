@@ -33,4 +33,8 @@ public class LoadCommand implements Command {
     public void redo() {
         throw new UnsupportedOperationException("Cannot redo a load command");
     }
+    
+     public String toString() {
+        return "load command";
+    }
 }

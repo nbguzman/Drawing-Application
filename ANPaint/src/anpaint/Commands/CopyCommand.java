@@ -31,4 +31,8 @@ public class CopyCommand implements Command{
     public void redo() {
         throw new UnsupportedOperationException("Cannot redo a copy command");
     }
+    
+    public String toString() {
+        return "copy command";
+    }
 }
