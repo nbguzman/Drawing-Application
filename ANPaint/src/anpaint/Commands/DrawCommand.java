@@ -45,4 +45,8 @@ public class DrawCommand implements Command {
         __drawPanel.setCurrentSet(_backup);
         __drawPanel.setBackupSet(_current);
     }
+    
+     public String toString() {
+        return "draw command";
+    }
 }

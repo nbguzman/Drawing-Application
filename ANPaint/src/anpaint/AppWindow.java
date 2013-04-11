@@ -380,6 +380,7 @@ public class AppWindow extends JFrame {
             _cmdsBackup.add(_cmds.pop());
             int i = _cmdsBackup.size() - 1;
             _cmdsBackup.get(i).undo();
+            System.out.println("Undoing: " + _cmdsBackup.get(i));
         }
     }
 
@@ -389,6 +390,7 @@ public class AppWindow extends JFrame {
             _cmds.add(_cmdsBackup.pop());
             int i = _cmds.size() - 1;
             _cmds.get(i).redo();
+            System.out.println("Redoing: " + _cmds.get(i));
         }
     }
 }

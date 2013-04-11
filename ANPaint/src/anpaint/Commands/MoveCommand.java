@@ -12,22 +12,38 @@ import java.util.ArrayList;
  */
 public class MoveCommand implements Command {
     DrawPanel __drawPanel;
+    ArrayList<BasicShape> _current;
+    ArrayList<BasicShape> _backup;
     
+    //initialize the DrawPanel and the current ShapeSet that drawpanel has
+    //set the drawpanel's backupset to what it currently is
     public MoveCommand(DrawPanel dp) {
         __drawPanel = dp;
+        _current = new ArrayList<>(__drawPanel.getCurrentSet());
+        _backup = new ArrayList<>(__drawPanel.getBackupSet());
     }
     
+    //set the current set to what it currently is, essentially repainting it
     @Override
     public void execute() {
-        
     }
     
+    //set the backup set to what it was before then undo the draw
     @Override
     public void undo() {
-        __drawPanel.undoMove();
+        __drawPanel.setCurrentSet(_backup);
     }
-
+    
+    //set the current set to the backup set made in drawpanel
+    //and then set the current set of drawpanel to the backup set
     @Override
     public void redo() {
+        _current = __drawPanel.getBackupSet();
+        __drawPanel.setCurrentSet(_backup);
+        __drawPanel.setBackupSet(_current);
+    }
+    
+     public String toString() {
+        return "move command";
     }
 }
