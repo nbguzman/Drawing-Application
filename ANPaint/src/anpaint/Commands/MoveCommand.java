@@ -19,8 +19,9 @@ public class MoveCommand implements Command {
     //set the drawpanel's backupset to what it currently is
     public MoveCommand(DrawPanel dp) {
         __drawPanel = dp;
-        _current = new ArrayList<>(__drawPanel.getCurrentSet());
-        _backup = new ArrayList<>(__drawPanel.getBackupSet());
+        _current = __drawPanel.copySet(__drawPanel.getCurrentSet());//new ArrayList<>(__drawPanel.getCurrentSet());
+        //__drawPanel.setBackupSet(_current); 
+        _backup =  __drawPanel.copySet(__drawPanel.getBackupSet());//new ArrayList<>(__drawPanel.getBackupSet());
     }
     
     //set the current set to what it currently is, essentially repainting it
@@ -31,14 +32,15 @@ public class MoveCommand implements Command {
     //set the backup set to what it was before then undo the draw
     @Override
     public void undo() {
-        __drawPanel.setCurrentSet(_backup);
+        __drawPanel.setBackupSet(_backup);
+        __drawPanel.undoMove();
     }
     
     //set the current set to the backup set made in drawpanel
     //and then set the current set of drawpanel to the backup set
     @Override
     public void redo() {
-        _current = __drawPanel.getBackupSet();
+        _current =  __drawPanel.copySet(__drawPanel.getBackupSet());
         __drawPanel.setCurrentSet(_backup);
         __drawPanel.setBackupSet(_current);
     }

@@ -232,7 +232,7 @@ public class DrawPanel extends JPanel {
 
     //undo last move
     public void undoMove() {
-        repaint();
+        setCurrentSet(_backup);
     }
 
     public ArrayList<BasicShape> getCurrentSet() {
@@ -240,7 +240,6 @@ public class DrawPanel extends JPanel {
     }
 
     public void setCurrentSet(ArrayList<BasicShape> source) {
-        //_backup = new ArrayList<>(source);
         try {
             BasicShape tempBS = null;
             if (source != null) {
@@ -269,18 +268,43 @@ public class DrawPanel extends JPanel {
             ex.printStackTrace();
         }
         repaint();
-        /*
-         _shapeSet = new ArrayList<>(source);
-         repaint();
-         * */
     }
 
     public ArrayList<BasicShape> getBackupSet() {
         return _backup;
     }
+    
+    public ArrayList<BasicShape> copySet(ArrayList<BasicShape> source) {
+        ArrayList<BasicShape> rc = new ArrayList<>();
+        try {
+            BasicShape tempBS = null;
+            if (source != null) {
+                for (BasicShape bs : source) {
+                    bs._colour = bs._backupColor;
+                    if (bs instanceof Circle) {
+                        tempBS = _circleFactory.cloneShape(bs);
+                    } else if (bs instanceof Line) {
+                        tempBS = _lineFactory.cloneShape(bs);
+                    } else if (bs instanceof Triangle) {
+                        tempBS = _triangleFactory.cloneShape(bs);
+                    } else if (bs instanceof Rectangle) {
+                        tempBS = _rectangleFactory.cloneShape(bs);
+                    } else if (bs instanceof Group) {
+                        tempBS = new Group((Group) bs);
+                    }
+                    if (tempBS != null) {
+                        rc.add(tempBS);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println("Setting BackupSet error, StackTrace:");
+            ex.printStackTrace();
+        }
+        return rc;
+    }
 
     public void setBackupSet(ArrayList<BasicShape> source) {
-        //_backup = new ArrayList<>(source);
         try {
             BasicShape tempBS = null;
             if (source != null) {
@@ -297,7 +321,6 @@ public class DrawPanel extends JPanel {
                         tempBS = _rectangleFactory.cloneShape(bs);
                     } else if (bs instanceof Group) {
                         tempBS = new Group((Group) bs);
-
                     }
                     if (tempBS != null) {
                         _backup.add(tempBS);
@@ -308,24 +331,6 @@ public class DrawPanel extends JPanel {
             System.out.println("Setting BackupSet error, StackTrace:");
             ex.printStackTrace();
         }
-        repaint();
-    }
-
-    public ArrayList<BasicShape> getCBuffer() {
-        return _copyBuffer;
-    }
-
-    public void setCBuffer(ArrayList<BasicShape> source) {
-        _copyBuffer = new ArrayList<>(source);
-        repaint();
-    }
-
-    public ArrayList<BasicShape> getCBufferBackup() {
-        return _copyBufferBackup;
-    }
-
-    public void setCBufferBackup(ArrayList<BasicShape> source) {
-        _copyBufferBackup = new ArrayList<>(source);
         repaint();
     }
 
@@ -355,16 +360,17 @@ public class DrawPanel extends JPanel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
+                setBackupSet(_shapeSet);
                 if (_state == PanelState.DRAW) {
-                    setBackupSet(_shapeSet);
+                    //setBackupSet(_shapeSet);
                     drawShape(e);
                 } else if (_state == PanelState.SELECT) {
                     selectShapes(e);
                 } else if (_state == PanelState.RESIZE) {
-                    setBackupSet(_shapeSet);
+                    //setBackupSet(_shapeSet);
                     resizeShape(e);
                 } else if (_state == PanelState.MOVE) {
-                    setBackupSet(_shapeSet);
+                    //setBackupSet(_shapeSet);
                     moveShape(e);
                 }
                 selection_ = null;
