@@ -10,7 +10,7 @@ public abstract class BasicShape extends Object implements Serializable{
     public boolean _style; //true solid, false dotted
     public int _weight;
     public boolean _selected;
-
+    public Color _backupColor;
     //the method definitions that must be implemented in the sub classes
     public abstract void add(BasicShape shape);
     public abstract void remove(BasicShape shape);
@@ -35,4 +35,8 @@ public abstract class BasicShape extends Object implements Serializable{
     }
     public abstract void resize();
     public abstract void toggleSelected();
+    
+    public boolean getSelected() {
+        return _selected;
+    }
 }

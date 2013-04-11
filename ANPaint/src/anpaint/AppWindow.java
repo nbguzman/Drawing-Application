@@ -11,6 +11,7 @@ import java.util.Stack;
 //this class will handle the application window and the button events
 public class AppWindow extends JFrame {
     //single instance, used globally
+
     private static AppWindow _instance;
     //data used within the class
     private DrawPanel _drawPanel;
@@ -18,10 +19,10 @@ public class AppWindow extends JFrame {
     private JComboBox _colourDDL;
     private JComboBox _lineWeightDDL;
     private JComboBox _lineStyleDDL;
-    private String[] _shapes = { "Line", "Rectangle", "Circle", "Triangle" };
-    private String[] _colours = { "Black", "Red", "Green", "Blue" };
-    private String[] _weight = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
-    private String[] _style = { "Solid", "Dashed" };
+    private String[] _shapes = {"Line", "Rectangle", "Circle", "Triangle"};
+    private String[] _colours = {"Black", "Red", "Green", "Blue"};
+    private String[] _weight = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+    private String[] _style = {"Solid", "Dashed"};
     //a "history" of commands
     public Stack<Command> _cmds;
     public Stack<Command> _cmdsBackup;
@@ -39,8 +40,9 @@ public class AppWindow extends JFrame {
 
     // only 1 instance of window
     public static AppWindow getInstance() {
-        if (_instance == null)
+        if (_instance == null) {
             _instance = new AppWindow();
+        }
         return _instance;
     }
 
@@ -109,8 +111,8 @@ public class AppWindow extends JFrame {
     private void buildFrame() {
         //the window positioning values
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        int height = (int)(dim.width * 0.8);
-        int width = (int)(dim.height * 0.8);
+        int height = (int) (dim.width * 0.8);
+        int width = (int) (dim.height * 0.8);
 
         //instantiate a panel to draw shapes on
         _drawPanel = new DrawPanel(_instance);
@@ -122,7 +124,7 @@ public class AppWindow extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setResizable(true);
         this.setVisible(true);
-        this.setLocation((dim.width-(this.getSize().width))/2, (dim.height-(this.getSize().height))/2);
+        this.setLocation((dim.width - (this.getSize().width)) / 2, (dim.height - (this.getSize().height)) / 2);
         this.add(_drawPanel);
     }
 
@@ -165,34 +167,24 @@ public class AppWindow extends JFrame {
         _redo = new JMenuItem("Redo");
         _redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
 
+        _copy.addActionListener(new InvokeCopy(_drawPanel));
+        _paste.addActionListener(new InvokePaste(_drawPanel));
+
         //undo the last commands
         //have to use anonymous inner class to access _cmds
-        _undo.addActionListener(new ActionListener(){
+        _undo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //place undos into a command history to be able to
-                //redo the commands within that history
-                if (!_cmds.isEmpty())
-                {
-                    _cmdsBackup.add(_cmds.pop());
-                    int i = _cmdsBackup.size() - 1;
-                    _cmdsBackup.get(i).undo();
-                }
+                undoAction();
             }
         });
 
         //redo the last commands
         //have to use anonymous inner class to access _cmds
-        _redo.addActionListener(new ActionListener(){
+        _redo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //execute the redo of the latest command stored in the history
-                if (!_cmdsBackup.isEmpty())
-                {
-                    _cmds.add(_cmdsBackup.pop());
-                    int i = _cmds.size() - 1;
-                    _cmds.get(i).redo();
-                }
+                redoAction();
             }
         });
 
@@ -227,39 +219,39 @@ public class AppWindow extends JFrame {
         JLabel tempLbl = new JLabel("Shape Options");
         tempLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
         _toolBar.add(tempLbl);
-        _toolBar.add(Box.createRigidArea(new Dimension(0,20)));
+        _toolBar.add(Box.createRigidArea(new Dimension(0, 20)));
 
         //shape options
         _shapesDDL = new JComboBox(_shapes);
         _shapesDDL.setSelectedIndex(0);
         setMaxSize(_shapesDDL);
         _toolBar.add(_shapesDDL);
-        _toolBar.add(Box.createRigidArea(new Dimension(0,5)));
+        _toolBar.add(Box.createRigidArea(new Dimension(0, 5)));
 
         _colourDDL = new JComboBox(_colours);
         _colourDDL.setSelectedIndex(0);
         setMaxSize(_colourDDL);
         _toolBar.add(_colourDDL);
-        _toolBar.add(Box.createRigidArea(new Dimension(0,5)));
+        _toolBar.add(Box.createRigidArea(new Dimension(0, 5)));
 
         _lineWeightDDL = new JComboBox(_weight);
         _lineWeightDDL.setSelectedIndex(0);
         setMaxSize(_lineWeightDDL);
         _toolBar.add(_lineWeightDDL);
-        _toolBar.add(Box.createRigidArea(new Dimension(0,5)));
+        _toolBar.add(Box.createRigidArea(new Dimension(0, 5)));
 
         _lineStyleDDL = new JComboBox(_style);
         _lineStyleDDL.setSelectedIndex(0);
         setMaxSize(_lineStyleDDL);
         _toolBar.add(_lineStyleDDL);
-        _toolBar.add(Box.createRigidArea(new Dimension(0,20)));
+        _toolBar.add(Box.createRigidArea(new Dimension(0, 20)));
 
         _shapeTool = new JButton("Shape Tool");
         _shapeTool.setAlignmentX(Component.CENTER_ALIGNMENT);
         _shapeTool.setMnemonic(KeyEvent.VK_D);
 
         //adding the action listener to know the shape tool is active
-        _shapeTool.addActionListener(new ActionListener(){
+        _shapeTool.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 _drawPanel.changeState(PanelState.DRAW);
@@ -321,13 +313,13 @@ public class AppWindow extends JFrame {
         tempLbl = new JLabel("Gouping Options");
         tempLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
         _toolBar.add(tempLbl);
-        _toolBar.add(Box.createRigidArea(new Dimension(0,20)));
+        _toolBar.add(Box.createRigidArea(new Dimension(0, 20)));
 
         _group = new JButton("Group");
         _group.setAlignmentX(Component.CENTER_ALIGNMENT);
         _group.setMnemonic(KeyEvent.VK_G);
 
-        _group.addActionListener(new ActionListener(){
+        _group.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 _drawPanel.groupShapes();
@@ -341,7 +333,7 @@ public class AppWindow extends JFrame {
         _ungroup.setAlignmentX(Component.CENTER_ALIGNMENT);
         _ungroup.setMnemonic(KeyEvent.VK_U);
 
-        _ungroup.addActionListener(new ActionListener(){
+        _ungroup.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 _drawPanel.unGroupShapes();
@@ -376,5 +368,24 @@ public class AppWindow extends JFrame {
         Dimension pref = jc.getPreferredSize();
         max.height = pref.height;
         jc.setMaximumSize(max);
+    }
+
+    private void undoAction() {
+        //place undos into a command history to be able to
+        //redo the commands within that history
+        if (!_cmds.isEmpty()) {
+            _cmdsBackup.add(_cmds.pop());
+            int i = _cmdsBackup.size() - 1;
+            _cmdsBackup.get(i).undo();
+        }
+    }
+
+    private void redoAction() {
+        //execute the redo of the latest command stored in the history
+        if (!_cmdsBackup.isEmpty()) {
+            _cmds.add(_cmdsBackup.pop());
+            int i = _cmds.size() - 1;
+            _cmds.get(i).redo();
+        }
     }
 }

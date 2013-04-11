@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 public abstract class ShapeCreator{
 
     public abstract BasicShape createShape(Point point, MouseEvent e, AppWindow window);
+    public abstract BasicShape cloneShape(BasicShape src);
 
     protected BasicShape callCreator(ShapeEnum shape) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

@@ -35,9 +35,15 @@ public class DrawPanel extends JPanel {
     private TriangleShapeCreator _triangleFactory;
     Graphics _g;
     private ArrayList<BasicShape> _backup;
+    private ArrayList<BasicShape> _copyBuffer;
+    private ArrayList<BasicShape> _copyBufferBackup;
     private PanelState _state;
 
     public DrawPanel(AppWindow app) {
+        _shapeSet = new ArrayList<>();
+        _backup = new ArrayList<>();
+        _copyBuffer = new ArrayList<>();
+        _copyBufferBackup = new ArrayList<>();
         _shapeSet = new ArrayList<>();
         _state = PanelState.DRAW;
         //_window = AppWindow.getInstance();      /** not returning the unique instance **/
@@ -128,9 +134,69 @@ public class DrawPanel extends JPanel {
     }
 
     public void copy() {
+        try {
+            clearCopyBuffer();
+            BasicShape tempBS = null;
+
+            for (BasicShape bs : _shapeSet) {
+                if (bs.getSelected()) {
+                    bs._colour = bs._backupColor;
+                    
+                    if (bs instanceof Circle) {
+                        tempBS = _circleFactory.cloneShape(bs);
+                    } 
+                    else if (bs instanceof Line) {
+                        tempBS = _lineFactory.cloneShape(bs);
+                    } 
+                    else if (bs instanceof Triangle) {
+                        tempBS = _triangleFactory.cloneShape(bs);
+                    } 
+                    else if (bs instanceof Rectangle) {
+                        tempBS = _rectangleFactory.cloneShape(bs);
+                    } 
+                    else if (bs instanceof Group) {
+                        for (int i = 0; i < bs.getChildren().size(); i++){
+                            bs.getChildren().get(i)._colour = bs.getChildren().get(i)._backupColor;
+                        }
+
+                        tempBS = new Group((Group) bs);
+                                       
+                    }
+                    if (tempBS != null) {
+                        tempBS.moveShape(-tempBS._pointSet.get(0).x, -tempBS._pointSet.get(0).y);
+                        _copyBuffer.add(tempBS);
+                    }
+                    System.out.println(bs + "copied");
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println("Copying error, StackTrace:");
+            ex.printStackTrace();
+        }
     }
 
     public void paste() {
+        try {
+            if (_copyBuffer != null) {
+                _shapeSet.addAll(_copyBuffer);
+                refreshCanvas();
+            }
+        } catch (Exception ex) {
+            System.out.println("Pasting error, StackTrace:");
+            ex.printStackTrace();
+        }
+    }
+
+    public void undoPaste() {
+        try {
+            if (_shapeSet != null && _copyBuffer != null) {
+                _shapeSet.removeAll(_copyBuffer);
+            }
+            refreshCanvas();
+        } catch (Exception ex) {
+            System.out.println("Undoing paste error, StackTrace:");
+            ex.printStackTrace();
+        }
     }
 
     //remove the last drawing done
@@ -160,6 +226,28 @@ public class DrawPanel extends JPanel {
         repaint();
     }
 
+    public ArrayList<BasicShape> getCBuffer() {
+        return _copyBuffer;
+    }
+
+    public void setCBuffer(ArrayList<BasicShape> source) {
+        _copyBuffer = new ArrayList<>(source);
+        repaint();
+    }
+
+    public ArrayList<BasicShape> getCBufferBackup() {
+        return _copyBufferBackup;
+    }
+
+    public void setCBufferBackup(ArrayList<BasicShape> source) {
+        _copyBufferBackup = new ArrayList<>(source);
+        repaint();
+    }
+
+    public void clearCopyBuffer() {
+        _copyBuffer.clear();
+    }
+
     public void refreshCanvas() {
         repaint();
     }
@@ -182,17 +270,11 @@ public class DrawPanel extends JPanel {
             public void mouseReleased(MouseEvent e) {
                 if (_state == PanelState.DRAW) {
                     drawShape(e);
-                }
-
-                else if (_state == PanelState.SELECT) {
+                } else if (_state == PanelState.SELECT) {
                     selectShapes(e);
-                }
-
-                else if (_state == PanelState.RESIZE) {
+                } else if (_state == PanelState.RESIZE) {
                     resizeShape(e);
-                }
-
-                else if (_state == PanelState.MOVE) {
+                } else if (_state == PanelState.MOVE) {
                     moveShape(e);
                 }
 
@@ -214,7 +296,6 @@ public class DrawPanel extends JPanel {
     }
 
     private void resizeShape(MouseEvent e) {
-
     }
 
     private void drawShape(MouseEvent e) {
@@ -260,12 +341,21 @@ public class DrawPanel extends JPanel {
             bigY = e.getY();
             smallY = _point.y;
         }
-
+        
         for (int i = 0; i < _shapeSet.size(); i++) {
             ArrayList<Point> pointSet = _shapeSet.get(i)._pointSet;
 
             if (_shapeSet.get(i)._selected) {
                 _shapeSet.get(i).toggleSelected();
+                if (_shapeSet.get(i) instanceof Group) {                
+                    for (int k = 0; k < _shapeSet.get(i).getChildren().size(); k++) {
+                        _shapeSet.get(i).getChildren().get(k)._colour = _shapeSet.get(i).getChildren().get(k)._backupColor;
+                    }
+                }
+                
+                else {
+                    _shapeSet.get(i)._colour = _shapeSet.get(i)._backupColor;
+                }
             }
 
             for (int j = 0; j < pointSet.size(); j++) {
@@ -275,6 +365,17 @@ public class DrawPanel extends JPanel {
                 if (x < bigX && x > smallX && y < bigY && y > smallY) {
                     _shapeSet.get(i).toggleSelected();
                     System.out.println("Shape " + i + " Selected: " + _shapeSet.get(i)._selected);
+                    
+                    if (_shapeSet.get(i) instanceof Group) {
+                        for (int k = 0; k < _shapeSet.get(i).getChildren().size(); k++) {
+                            _shapeSet.get(i).getChildren().get(k)._colour = Color.lightGray;
+                        }
+                    }
+                    
+                    else {
+                        _shapeSet.get(i)._colour = Color.lightGray;
+                    }
+                    
                     j = pointSet.size();
                 }
             }
@@ -289,6 +390,7 @@ public class DrawPanel extends JPanel {
         for (int i = 0; i < n; i++) {
             if (_shapeSet.get(i - removed)._selected) {
                 _shapeSet.get(i - removed).toggleSelected();
+                _shapeSet.get(i - removed)._colour = _shapeSet.get(i - removed)._backupColor;
                 group.add(_shapeSet.get(i - removed));
                 _shapeSet.remove(i - removed);
                 removed++;
