@@ -1,10 +1,13 @@
 package anpaint;
 
 import anpaint.BasicShapes.*;
+import anpaint.Commands.Command;
 import anpaint.Commands.DrawCommand;
+import anpaint.Commands.MoveCommand;
 import anpaint.Creators.*;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -38,6 +41,8 @@ public class DrawPanel extends JPanel {
     private ArrayList<BasicShape> _copyBuffer;
     private ArrayList<BasicShape> _copyBufferBackup;
     private PanelState _state;
+    java.awt.Rectangle selection_;
+    Point anchor;
 
     public DrawPanel(AppWindow app) {
         _shapeSet = new ArrayList<>();
@@ -66,6 +71,11 @@ public class DrawPanel extends JPanel {
         for (int i = 0; i < _shapeSet.size(); i++) {
             _shapeSet.get(i).draw(g);
         }
+
+        if (selection_ != null) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.draw(selection_);
+        }
     }
 
     public void removeCmdHistory() {
@@ -92,7 +102,6 @@ public class DrawPanel extends JPanel {
                 removeCmdHistory();
                 refreshCanvas();
             }
-
 
         } catch (Exception ex) {
             System.out.println("Loading error, StackTrace:");
@@ -165,6 +174,7 @@ public class DrawPanel extends JPanel {
                     if (tempBS != null) {
                         tempBS.moveShape(-tempBS._pointSet.get(0).x, -tempBS._pointSet.get(0).y);
                         _copyBuffer.add(tempBS);
+                        _copyBufferBackup = _copyBuffer;
                     }
                 }
             }
@@ -185,15 +195,30 @@ public class DrawPanel extends JPanel {
             ex.printStackTrace();
         }
     }
-
+    
     public void undoPaste() {
         try {
             if (_shapeSet != null && _copyBuffer != null) {
                 _shapeSet.removeAll(_copyBuffer);
+                _copyBufferBackup = _copyBuffer;
+            }
+            refreshCanvas();
+            
+        } catch (Exception ex) {
+            System.out.println("Undoing paste error, StackTrace:");
+            ex.printStackTrace();
+        }
+    }
+
+    public void redoPaste() {
+        try {
+            if (_copyBufferBackup != null) {
+                _shapeSet.addAll(_copyBufferBackup);
+                _copyBuffer = _copyBufferBackup;
             }
             refreshCanvas();
         } catch (Exception ex) {
-            System.out.println("Undoing paste error, StackTrace:");
+            System.out.println("Redoing paste error, StackTrace:");
             ex.printStackTrace();
         }
     }
@@ -207,6 +232,10 @@ public class DrawPanel extends JPanel {
         }
     }
 
+    //undo last move
+    public void undoMove() {
+    }
+    
     public ArrayList<BasicShape> getCurrentSet() {
         return _shapeSet;
     }
@@ -257,6 +286,8 @@ public class DrawPanel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 _point = new Point(e.getX(), e.getY());
+                anchor = e.getPoint();
+                selection_ = new java.awt.Rectangle(anchor);
             }
         });
 
@@ -273,11 +304,25 @@ public class DrawPanel extends JPanel {
                     selectShapes(e);
                 } else if (_state == PanelState.MOVE) {
                     moveShape(e);
-                }
 
+                }
+                selection_ = null;
                 repaint();
+
             }
         });
+
+        this.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (_state == PanelState.SELECT) {
+                    selection_.setBounds((int) Math.min(anchor.x, e.getX()), (int) Math.min(anchor.y, e.getY()),
+                            (int) Math.abs(e.getX() - anchor.x), (int) Math.abs(e.getY() - anchor.y));
+                    repaint();
+                }
+            }
+        });
+
     }
 
     private void moveShape(MouseEvent e) {
@@ -290,9 +335,16 @@ public class DrawPanel extends JPanel {
                 _shapeSet.get(i).moveShape(x - _shapeSet.get(i)._pointSet.get(0).x, y - _shapeSet.get(i)._pointSet.get(0).y);
             }
         }
+        
+        _window.addCommand(new MoveCommand((DrawPanel) e.getComponent()));
+        _window.clearBackup();
     }
 
     private void resizeShape(MouseEvent e) {
+    }
+
+    public void addCommand(Command cmd) {
+        _window.addCommand(cmd);
     }
 
     private void drawShape(MouseEvent e) {
@@ -361,13 +413,11 @@ public class DrawPanel extends JPanel {
 
                 if (x < bigX && x > smallX && y < bigY && y > smallY) {
                     _shapeSet.get(i).toggleSelected();
-
                     if (_shapeSet.get(i) instanceof Group) {
                         for (int k = 0; k < _shapeSet.get(i).getChildren().size(); k++) {
                             _shapeSet.get(i).getChildren().get(k)._colour = Color.lightGray;
                         }
                     }
-
                     else {
                         _shapeSet.get(i)._colour = Color.lightGray;
                     }

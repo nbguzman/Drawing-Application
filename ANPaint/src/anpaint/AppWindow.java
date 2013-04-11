@@ -148,6 +148,8 @@ public class AppWindow extends JFrame {
         _load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         _exit = new JMenuItem("Exit");
         _exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+        
+        //invokers for save, load, and exit
         _save.addActionListener(new InvokeSave(_drawPanel));
         _load.addActionListener(new InvokeLoad(_drawPanel));
         _exit.addActionListener(new InvokeExit(_drawPanel));
@@ -167,6 +169,7 @@ public class AppWindow extends JFrame {
         _redo = new JMenuItem("Redo");
         _redo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
 
+        // invokers for copy and paste
         _copy.addActionListener(new InvokeCopy(_drawPanel));
         _paste.addActionListener(new InvokePaste(_drawPanel));
 
