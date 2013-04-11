@@ -154,18 +154,14 @@ public class DrawPanel extends JPanel {
 
                     if (bs instanceof Circle) {
                         tempBS = _circleFactory.cloneShape(bs);
-                    }
-                    else if (bs instanceof Line) {
+                    } else if (bs instanceof Line) {
                         tempBS = _lineFactory.cloneShape(bs);
-                    }
-                    else if (bs instanceof Triangle) {
+                    } else if (bs instanceof Triangle) {
                         tempBS = _triangleFactory.cloneShape(bs);
-                    }
-                    else if (bs instanceof Rectangle) {
+                    } else if (bs instanceof Rectangle) {
                         tempBS = _rectangleFactory.cloneShape(bs);
-                    }
-                    else if (bs instanceof Group) {
-                        for (int i = 0; i < bs.getChildren().size(); i++){
+                    } else if (bs instanceof Group) {
+                        for (int i = 0; i < bs.getChildren().size(); i++) {
                             bs.getChildren().get(i)._colour = bs.getChildren().get(i)._backupColor;
                         }
 
@@ -276,7 +272,7 @@ public class DrawPanel extends JPanel {
     public ArrayList<BasicShape> getBackupSet() {
         return _backup;
     }
-    
+
     public ArrayList<BasicShape> copySet(ArrayList<BasicShape> source) {
         ArrayList<BasicShape> rc = new ArrayList<>();
         try {
@@ -466,9 +462,7 @@ public class DrawPanel extends JPanel {
                     for (int k = 0; k < _shapeSet.get(i).getChildren().size(); k++) {
                         _shapeSet.get(i).getChildren().get(k)._colour = _shapeSet.get(i).getChildren().get(k)._backupColor;
                     }
-                }
-
-                else {
+                } else {
                     _shapeSet.get(i)._colour = _shapeSet.get(i)._backupColor;
                 }
             }
@@ -483,8 +477,7 @@ public class DrawPanel extends JPanel {
                         for (int k = 0; k < _shapeSet.get(i).getChildren().size(); k++) {
                             _shapeSet.get(i).getChildren().get(k)._colour = Color.lightGray;
                         }
-                    }
-                    else {
+                    } else {
                         _shapeSet.get(i)._colour = Color.lightGray;
                     }
 
@@ -534,9 +527,11 @@ public class DrawPanel extends JPanel {
     public void increaseShapeSize() {
         int n = _shapeSet.size();
 
-        for (int i = 0; i < n; i++)
-            if (_shapeSet.get(i)._selected)
+        for (int i = 0; i < n; i++) {
+            if (_shapeSet.get(i)._selected) {
                 _shapeSet.get(i).resize(true);
+            }
+        }
 
         repaint();
     }
@@ -544,9 +539,11 @@ public class DrawPanel extends JPanel {
     public void decreaseShapeSize() {
         int n = _shapeSet.size();
 
-        for (int i = 0; i < n; i++)
-            if (_shapeSet.get(i)._selected)
+        for (int i = 0; i < n; i++) {
+            if (_shapeSet.get(i)._selected) {
                 _shapeSet.get(i).resize(false);
+            }
+        }
 
         repaint();
     }

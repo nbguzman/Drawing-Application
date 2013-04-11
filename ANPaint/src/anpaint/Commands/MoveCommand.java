@@ -40,8 +40,9 @@ public class MoveCommand implements Command {
     //and then set the current set of drawpanel to the backup set
     @Override
     public void redo() {
-        _current =  __drawPanel.copySet(__drawPanel.getBackupSet());
-        __drawPanel.setCurrentSet(_backup);
+        //_current =  __drawPanel.copySet(__drawPanel.getBackupSet());
+        //_current = _backup;
+        __drawPanel.setCurrentSet(_current);
         __drawPanel.setBackupSet(_current);
     }
     
