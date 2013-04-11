@@ -5,7 +5,9 @@ import anpaint.Commands.DrawCommand;
 import anpaint.Creators.*;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -38,6 +40,8 @@ public class DrawPanel extends JPanel {
     private ArrayList<BasicShape> _copyBuffer;
     private ArrayList<BasicShape> _copyBufferBackup;
     private PanelState _state;
+    java.awt.Rectangle selection_;
+    Point anchor;
 
     public DrawPanel(AppWindow app) {
         _shapeSet = new ArrayList<>();
@@ -66,6 +70,11 @@ public class DrawPanel extends JPanel {
         for (int i = 0; i < _shapeSet.size(); i++) {
             _shapeSet.get(i).draw(g);
         }
+
+        if (selection_ != null) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.draw(selection_);
+        }
     }
 
     public void removeCmdHistory() {
@@ -92,7 +101,6 @@ public class DrawPanel extends JPanel {
                 removeCmdHistory();
                 refreshCanvas();
             }
-
 
         } catch (Exception ex) {
             System.out.println("Loading error, StackTrace:");
@@ -258,6 +266,8 @@ public class DrawPanel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 _point = new Point(e.getX(), e.getY());
+                anchor = e.getPoint();
+                selection_ = new java.awt.Rectangle(anchor);
             }
         });
 
@@ -276,11 +286,25 @@ public class DrawPanel extends JPanel {
                     resizeShape(e);
                 } else if (_state == PanelState.MOVE) {
                     moveShape(e);
+                    
                 }
-
+                selection_ = null;
                 repaint();
+
             }
         });
+
+        this.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (_state == PanelState.SELECT) {
+                    selection_.setBounds((int) Math.min(anchor.x, e.getX()), (int) Math.min(anchor.y, e.getY()),
+                            (int) Math.abs(e.getX() - anchor.x), (int) Math.abs(e.getY() - anchor.y));
+                    repaint();
+                }
+            }
+        });
+
     }
 
     private void moveShape(MouseEvent e) {
